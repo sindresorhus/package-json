@@ -28,7 +28,8 @@
     "module"
   ],
   "dependencies": {
-    "got": "^0.3.0"
+    "got": "^0.3.0",
+    "registry-url": "^0.1.0"
   },
   "devDependencies": {
     "mocha": "*"
