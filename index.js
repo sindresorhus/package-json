@@ -8,24 +8,17 @@ module.exports = function (name, version, cb) {
 		version = '';
 	}
 
-	registryUrl(function (err, url) {
+	got(registryUrl + encodeURIComponent(name) + '/' + version, function (err, data) {
+		if (err === 404) {
+			cb(new Error('Package or version doesn\'t exist'));
+			return;
+		}
+
 		if (err) {
 			cb(err);
 			return;
 		}
 
-		got(url + encodeURIComponent(name) + '/' + version, function (err, data) {
-			if (err === 404) {
-				cb(new Error('Package or version doesn\'t exist'));
-				return;
-			}
-
-			if (err) {
-				cb(err);
-				return;
-			}
-
-			cb(null, JSON.parse(data));
-		});
+		cb(null, JSON.parse(data));
 	});
 };
