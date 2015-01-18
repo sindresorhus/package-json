@@ -34,6 +34,11 @@ You can optionally specify a version (e.g. `0.1.0`) or `latest`.
 If you don't specify a version you'll get the [main entry](http://registry.npmjs.org/pageres/) containing all versions.
 
 
+## Related
+
+- [`npm-keyword`](https://github.com/sindresorhus/npm-keyword) - Get a list of npm packages with a certain keyword
+
+
 ## License
 
 MIT © [Sindre Sorhus](http://sindresorhus.com)
