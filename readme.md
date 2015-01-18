@@ -16,10 +16,6 @@ $ npm install --save package-json
 var packageJson = require('package-json');
 
 packageJson('pageres', 'latest', function (err, json) {
-	if (err) {
-		throw err;
-	}
-
 	console.log(json);
 	//=> { name: 'pageres', ... }
 });
