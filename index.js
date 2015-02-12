@@ -9,12 +9,12 @@ module.exports = function (name, version, cb) {
 	}
 
 	got(registryUrl + encodeURIComponent(name) + '/' + version, function (err, data) {
-		if (err) {
-			if (err.code === 404) {
-				cb(new Error('Package or version doesn\'t exist'));
-				return;
-			}
+		if (err && err.code === 404) {
+			cb(new Error('Package or version doesn\'t exist'));
+			return;
+		}
 
+		if (err) {
 			cb(err);
 			return;
 		}
