@@ -25,7 +25,9 @@
     "pkg",
     "package.json",
     "json",
-    "module"
+    "module",
+    "scope",
+    "scoped"
   ],
   "dependencies": {
     "got": "^2.4.0",

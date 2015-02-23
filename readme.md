@@ -19,6 +19,12 @@ packageJson('pageres', 'latest', function (err, json) {
 	console.log(json);
 	//=> { name: 'pageres', ... }
 });
+
+// also works with scoped packages
+packageJson('@company/package', 'latest', function (err, json) {
+	console.log(json);
+	//=> { name: 'package', ... }
+});
 ```
 
 
