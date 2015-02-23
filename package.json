@@ -29,7 +29,7 @@
   ],
   "dependencies": {
     "got": "^2.4.0",
-    "registry-url": "^2.0.0"
+    "registry-url": "^3.0.0"
   },
   "devDependencies": {
     "mocha": "*"
