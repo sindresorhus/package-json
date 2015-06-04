@@ -25,6 +25,11 @@ packageJson('@company/package', 'latest', function (err, json) {
 	console.log(json);
 	//=> { name: 'package', ... }
 });
+
+packageJson.field('pageres', 'description', function (err, field) {
+	console.log(field);
+	//=> 'Capture website screenshots'
+});
 ```
 
 
@@ -34,6 +39,10 @@ packageJson('@company/package', 'latest', function (err, json) {
 
 You can optionally specify a version (e.g. `0.1.0`) or `latest`.  
 If you don't specify a version you'll get the [main entry](http://registry.npmjs.org/pageres/) containing all versions.
+
+### packageJson.field(name, field, callback)
+
+Get a specific field in the `package.json`.
 
 
 ## Related

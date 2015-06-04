@@ -30,7 +30,7 @@
     "scoped"
   ],
   "dependencies": {
-    "got": "^2.4.0",
+    "got": "^3.2.0",
     "registry-url": "^3.0.0"
   },
   "devDependencies": {
