@@ -2,35 +2,58 @@
 var assert = require('assert');
 var packageJson = require('./');
 
-it('should get the package.json', function (cb) {
-	packageJson('pageres', function (err, json) {
-		assert(!err, err);
-		assert.strictEqual(json.name, 'pageres');
-		cb();
-	});
-});
+function runTests(cfg){
 
-it('should get the package.json for a specific version', function (cb) {
-	packageJson('pageres', '0.1.0', function (err, json) {
-		assert(!err, err);
-		assert.strictEqual(json.version, '0.1.0');
-		cb();
+	it('should get the package.json', function (cb) {
+		packageJson(cfg.name, function (err, json) {
+			assert(!err, err);
+			assert.strictEqual(json.name, cfg.name);
+			cb();
+		});
 	});
-});
 
-it('should get the package.json main entry when no version is specified', function (cb) {
-	packageJson('pageres', function (err, json) {
-		assert(!err, err);
-		assert(json._id);
-		cb();
+	it('should get the package.json for a specific version', function (cb) {
+		packageJson(cfg.name, cfg.version, function (err, json) {
+			assert(!err, err);
+			assert.strictEqual(json.version, cfg.version);
+			cb();
+		});
 	});
-});
 
-it('get a single field', function (cb) {
-	packageJson.field('pageres', 'description', function (err, res) {
-		assert(!err, err);
-		assert(typeof res === 'string');
-		assert(/screenshots/.test(res));
-		cb();
+	it('should get the package.json main entry when no version is specified', function (cb) {
+		packageJson(cfg.name, function (err, json) {
+			assert(!err, err);
+			assert(json._id);
+			cb();
+		});
 	});
-});
+
+	it('get a single field', function (cb) {
+		packageJson.field(cfg.name, 'description', function (err, res) {
+			assert(!err, err);
+			assert(typeof res === 'string');
+			assert(cfg.descriptionRe.test(res));
+			cb();
+		});
+	});
+}
+
+// test spec
+var spec = {
+	'public packages': {
+		name: 'pageres',
+		version: '0.1.0',
+		descriptionRe: /screenshots/
+	},
+	'scoped packages': {
+		name: '@rmn/roux-cli',
+		version: '0.1.0',
+		descriptionRe: /The Roux command line interface/
+	}
+};
+
+// test runner
+var keys = Object.keys(spec);
+for (var i = 0; i < keys.length; i++) {
+	describe(keys[i], runTests.bind(undefined, spec[keys[i]]));
+}

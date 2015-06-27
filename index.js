@@ -18,8 +18,21 @@ function get(url, cb) {
 	});
 }
 
+function getCleanRegistryUrl(name){
+	var registry = registryUrl(name.split('/')[0]);
+
+	// Ensure trailing slash
+	if(registry[registry.length-1] !== '/') {
+		registry += '/';
+	}
+
+	return registry;
+}
+
 module.exports = function (name, version, cb) {
-	var url = registryUrl(name.split('/')[0]) + name + '/';
+	var registry = getCleanRegistryUrl(name);
+
+	var url = registry + encodeURIComponent(name) + '/';
 
 	if (typeof version !== 'string') {
 		cb = version;
@@ -30,8 +43,11 @@ module.exports = function (name, version, cb) {
 };
 
 module.exports.field = function (name, field, cb) {
-	var url = registryUrl(name.split('/')[0]) +
-		'-/by-field/?key=%22' + name + '%22&field=' + field;
+	var url = getCleanRegistryUrl(name) +
+		'-/by-field/?key=%22' +
+		encodeURIComponent(name) +
+		'%22&field=' +
+		field;
 
 	get(url, function (err, res) {
 		if (err) {
