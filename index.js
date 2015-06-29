@@ -29,10 +29,20 @@ function getCleanRegistryUrl(name){
 	return registry;
 }
 
+function getCleanName(name){
+	name = name.split('@');
+	if(name.length === 2) {
+		name = '@' + encodeURIComponent(name[1]);
+	} else if(name.length === 1) {
+		name = encodeURIComponent(name[0]);
+	}
+	return name;
+}
+
 module.exports = function (name, version, cb) {
 	var registry = getCleanRegistryUrl(name);
 
-	var url = registry + encodeURIComponent(name) + '/';
+	var url = registry + getCleanName(name) + '/';
 
 	if (typeof version !== 'string') {
 		cb = version;
@@ -45,7 +55,7 @@ module.exports = function (name, version, cb) {
 module.exports.field = function (name, field, cb) {
 	var url = getCleanRegistryUrl(name) +
 		'-/by-field/?key=%22' +
-		encodeURIComponent(name) +
+		getCleanName(name) +
 		'%22&field=' +
 		field;
 

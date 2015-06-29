@@ -1,5 +1,5 @@
 'use strict';
-var assert = require('assert');
+var assert = require('chai').assert;
 var packageJson = require('./');
 
 function runTests(cfg){
@@ -46,9 +46,9 @@ var spec = {
 		descriptionRe: /screenshots/
 	},
 	'scoped packages': {
-		name: '@rmn/roux-cli',
-		version: '0.1.0',
-		descriptionRe: /The Roux command line interface/
+		name: '@sindresorhus/df',
+		version: '1.0.0',
+		descriptionRe: /Get free disk space info from/
 	}
 };
 
