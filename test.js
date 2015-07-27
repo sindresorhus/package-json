@@ -47,7 +47,7 @@ var spec = {
 	},
 	'scoped packages': {
 		name: '@sindresorhus/df',
-		version: '1.0.0',
+		version: '1.0.1',
 		descriptionRe: /Get free disk space info from/
 	}
 };

@@ -18,17 +18,6 @@ function get(url, cb) {
 	});
 }
 
-function getCleanRegistryUrl(name){
-	var registry = registryUrl(name.split('/')[0]);
-
-	// Ensure trailing slash
-	if(registry[registry.length-1] !== '/') {
-		registry += '/';
-	}
-
-	return registry;
-}
-
 function getCleanName(name){
 	name = name.split('@');
 	if(name.length === 2) {
@@ -40,7 +29,7 @@ function getCleanName(name){
 }
 
 module.exports = function (name, version, cb) {
-	var registry = getCleanRegistryUrl(name);
+	var registry = registryUrl(name.split('/')[0]);
 
 	var url = registry + getCleanName(name) + '/';
 
@@ -53,7 +42,7 @@ module.exports = function (name, version, cb) {
 };
 
 module.exports.field = function (name, field, cb) {
-	var url = getCleanRegistryUrl(name) +
+	var url = registryUrl(name.split('/')[0]) +
 		'-/by-field/?key=%22' +
 		getCleanName(name) +
 		'%22&field=' +
