@@ -19,6 +19,10 @@ function get(url, cb) {
 }
 
 function getCleanName(name){
+	// The any path components in the name need to be URI encoded, however the @
+	// symbol must not be encoded.
+	// Valid URL: https://registry.npmjs.org/@sindresorhus%2Fdf/
+	// Invalid URL: https://registry.npmjs.org/%40sindresorhus%2Fdf
 	name = name.split('@');
 	if(name.length === 2) {
 		name = '@' + encodeURIComponent(name[1]);
@@ -30,7 +34,6 @@ function getCleanName(name){
 
 module.exports = function (name, version, cb) {
 	var registry = registryUrl(name.split('/')[0]);
-
 	var url = registry + getCleanName(name) + '/';
 
 	if (typeof version !== 'string') {
@@ -43,10 +46,7 @@ module.exports = function (name, version, cb) {
 
 module.exports.field = function (name, field, cb) {
 	var url = registryUrl(name.split('/')[0]) +
-		'-/by-field/?key=%22' +
-		getCleanName(name) +
-		'%22&field=' +
-		field;
+		'-/by-field/?key=%22' + getCleanName(name) + '%22&field=' + field;
 
 	get(url, function (err, res) {
 		if (err) {

@@ -53,7 +53,6 @@ var spec = {
 };
 
 // test runner
-var keys = Object.keys(spec);
-for (var i = 0; i < keys.length; i++) {
-	describe(keys[i], runTests.bind(undefined, spec[keys[i]]));
-}
+Object.keys(spec).forEach(function(key){
+	describe(key, runTests.bind(null, spec[key]));
+});
