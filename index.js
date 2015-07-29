@@ -19,17 +19,11 @@ function get(url, cb) {
 }
 
 function getCleanName(name){
-	// The any path components in the name need to be URI encoded, however the @
+	// Any path components in the name need to be URI encoded, however the @
 	// symbol must not be encoded.
 	// Valid URL: https://registry.npmjs.org/@sindresorhus%2Fdf/
 	// Invalid URL: https://registry.npmjs.org/%40sindresorhus%2Fdf
-	name = name.split('@');
-	if(name.length === 2) {
-		name = '@' + encodeURIComponent(name[1]);
-	} else if(name.length === 1) {
-		name = encodeURIComponent(name[0]);
-	}
-	return name;
+	return encodeURIComponent(name).replace(/^%40/, '@');
 }
 
 module.exports = function (name, version, cb) {
