@@ -13,11 +13,16 @@ function runTests(cfg){
 	});
 
 	it('should get the package.json for a specific version', function (cb) {
-		packageJson(cfg.name, cfg.version, function (err, json) {
-			assert(!err, err);
-			assert.strictEqual(json.version, cfg.version);
+		if(cfg.version === 'expect-throw') {
+			assert.throws(packageJson.bind(null, cfg.name, cfg.version));
 			cb();
-		});
+		} else {
+			packageJson(cfg.name, cfg.version, function (err, json) {
+				assert(!err, err);
+				assert.strictEqual(json.version, cfg.version);
+				cb();
+			});
+		}
 	});
 
 	it('should get the package.json main entry when no version is specified', function (cb) {
@@ -47,7 +52,7 @@ var spec = {
 	},
 	'scoped packages': {
 		name: '@sindresorhus/df',
-		version: '1.0.1',
+		version: 'expect-throw',
 		descriptionRe: /Get free disk space info from/
 	}
 };
