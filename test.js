@@ -33,14 +33,6 @@ function runTests(cfg){
 		});
 	});
 
-	it('get a single field', function (cb) {
-		packageJson.field(cfg.name, 'description', function (err, res) {
-			assert(!err, err);
-			assert(typeof res === 'string');
-			assert(cfg.descriptionRe.test(res));
-			cb();
-		});
-	});
 }
 
 // test spec
