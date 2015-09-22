@@ -25,12 +25,3 @@ it('should get the package.json main entry when no version is specified', functi
 		cb();
 	});
 });
-
-it('get a single field', function (cb) {
-	packageJson.field('pageres', 'description', function (err, res) {
-		assert(!err, err);
-		assert(typeof res === 'string');
-		assert(/screenshots/.test(res));
-		cb();
-	});
-});
