@@ -39,7 +39,7 @@ module.exports = function (name, version, cb) {
 		version = '';
 	}
 
-	if(version && packageIsScoped(name)) {
+	if (version && packageIsScoped(name)) {
 		throw new Error('Fetching a specific version of a scoped package is not allowed by npm.');
 	}
 
