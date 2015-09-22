@@ -18,12 +18,29 @@ function get(url, cb) {
 	});
 }
 
+function getCleanName(name){
+	// Any path components in the name need to be URI encoded, however the @
+	// symbol must not be encoded.
+	// Valid URL: https://registry.npmjs.org/@sindresorhus%2Fdf/
+	// Invalid URL: https://registry.npmjs.org/%40sindresorhus%2Fdf
+	return encodeURIComponent(name).replace(/^%40/, '@');
+}
+
+function packageIsScoped(name){
+	return name[0] === '@';
+}
+
 module.exports = function (name, version, cb) {
-	var url = registryUrl(name.split('/')[0]) + name + '/';
+	var registry = registryUrl(name.split('/')[0]);
+	var url = registry + getCleanName(name) + '/';
 
 	if (typeof version !== 'string') {
 		cb = version;
 		version = '';
+	}
+
+	if (version && packageIsScoped(name)) {
+		throw new Error('Fetching a specific version of a scoped package is not allowed by npm.');
 	}
 
 	get(url + version, cb);
@@ -31,7 +48,7 @@ module.exports = function (name, version, cb) {
 
 module.exports.field = function (name, field, cb) {
 	var url = registryUrl(name.split('/')[0]) +
-		'-/by-field/?key=%22' + name + '%22&field=' + field;
+		'-/by-field/?key=%22' + getCleanName(name) + '%22&field=' + field;
 
 	get(url, function (err, res) {
 		if (err) {

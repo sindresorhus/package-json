@@ -31,9 +31,10 @@
   ],
   "dependencies": {
     "got": "^3.2.0",
-    "registry-url": "^3.0.0"
+    "registry-url": "^3.0.3"
   },
   "devDependencies": {
+    "chai": "^3.0.0",
     "mocha": "*"
   }
 }
