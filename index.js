@@ -3,8 +3,6 @@ var got = require('got');
 var registryUrl = require('registry-url');
 
 function get(url) {
-	console.log(url);
-
 	return got(url, {json: true})
 		.then(function (res) {
 			return res.body;
