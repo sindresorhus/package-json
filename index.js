@@ -2,48 +2,42 @@
 var got = require('got');
 var registryUrl = require('registry-url');
 
-function get(url, cb) {
-	got(url, {json: true}, function (err, data) {
-		if (err && err.code === 404) {
-			cb(new Error('Package or version doesn\'t exist'));
-			return;
-		}
+function get(url) {
+	console.log(url);
 
-		if (err) {
-			cb(err);
-			return;
-		}
+	return got(url, {json: true})
+		.then(function (res) {
+			return res.body;
+		})
+		.catch(function (err) {
+			if (err.code === 404) {
+				throw new Error('Package or version doesn\'t exist');
+			}
 
-		cb(null, data);
-	});
+			throw err;
+		});
 }
 
-module.exports = function (name, version, cb) {
+module.exports = function (name, version) {
 	var url = registryUrl(name.split('/')[0]) + name + '/';
 
 	if (typeof version !== 'string') {
-		cb = version;
 		version = '';
 	}
 
-	get(url + version, cb);
+	return get(url + version);
 };
 
-module.exports.field = function (name, field, cb) {
+module.exports.field = function (name, field) {
 	var url = registryUrl(name.split('/')[0]) +
 		'-/by-field/?key=%22' + name + '%22&field=' + field;
 
-	get(url, function (err, res) {
-		if (err) {
-			cb(err);
-			return;
-		}
+	return get(url)
+		.then(function (res) {
+			if (Object.keys(res).length === 0) {
+				throw Error('Field `' + field + '` doesn\'t exist');
+			}
 
-		if (Object.keys(res).length === 0) {
-			cb(new Error('Field `' + field + '` doesn\'t exist'));
-			return;
-		}
-
-		cb(null, res[name][field]);
-	});
+			return res[name][field];
+		});
 };

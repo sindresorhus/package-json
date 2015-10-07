@@ -13,20 +13,20 @@ $ npm install --save package-json
 ## Usage
 
 ```js
-var packageJson = require('package-json');
+const packageJson = require('package-json');
 
-packageJson('pageres', 'latest', function (err, json) {
+packageJson('pageres', 'latest').then(json => {
 	console.log(json);
 	//=> { name: 'pageres', ... }
 });
 
 // also works with scoped packages
-packageJson('@company/package', 'latest', function (err, json) {
+packageJson('@company/package', 'latest'.then(json => {
 	console.log(json);
 	//=> { name: 'package', ... }
 });
 
-packageJson.field('pageres', 'description', function (err, field) {
+packageJson.field('pageres', 'description'.then(field => {
 	console.log(field);
 	//=> 'Capture website screenshots'
 });
@@ -37,7 +37,7 @@ packageJson.field('pageres', 'description', function (err, field) {
 
 ### packageJson(name, [version], callback)
 
-You can optionally specify a version (e.g. `0.1.0`) or `latest`.  
+You can optionally specify a version (e.g. `0.1.0`) or `latest`.
 If you don't specify a version you'll get the [main entry](http://registry.npmjs.org/pageres/) containing all versions.
 
 ### packageJson.field(name, field, callback)
