@@ -37,7 +37,7 @@ packageJson.field('pageres', 'description'.then(field => {
 
 ### packageJson(name, [version], callback)
 
-You can optionally specify a version (e.g. `0.1.0`) or `latest`.
+You can optionally specify a version (e.g. `0.1.0`) or `latest`.  
 If you don't specify a version you'll get the [main entry](http://registry.npmjs.org/pageres/) containing all versions.
 
 ### packageJson.field(name, field, callback)
