@@ -21,17 +21,3 @@ module.exports = function (name, version) {
 
 	return get(url + (version || ''));
 };
-
-module.exports.field = function (name, field) {
-	var url = registryUrl(name.split('/')[0]) +
-		'-/by-field/?key=%22' + name + '%22&field=' + field;
-
-	return get(url)
-		.then(function (res) {
-			if (Object.keys(res).length === 0) {
-				throw Error('Field `' + field + '` doesn\'t exist');
-			}
-
-			return res[name][field];
-		});
-};
