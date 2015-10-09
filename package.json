@@ -13,7 +13,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "xo && ava"
   },
   "files": [
     "index.js"
@@ -30,10 +30,16 @@
     "scoped"
   ],
   "dependencies": {
-    "got": "^3.2.0",
+    "got": "^4.2.0",
     "registry-url": "^3.0.0"
   },
   "devDependencies": {
-    "mocha": "*"
+    "ava": "*",
+    "xo": "*"
+  },
+  "xo": {
+    "ignores": [
+      "test.js"
+    ]
   }
 }
