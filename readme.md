@@ -21,12 +21,12 @@ packageJson('pageres', 'latest').then(json => {
 });
 
 // also works with scoped packages
-packageJson('@company/package', 'latest'.then(json => {
+packageJson('@company/package', 'latest').then(json => {
 	console.log(json);
 	//=> { name: 'package', ... }
 });
 
-packageJson.field('pageres', 'description'.then(field => {
+packageJson.field('pageres', 'description').then(field => {
 	console.log(field);
 	//=> 'Capture website screenshots'
 });
