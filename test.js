@@ -19,9 +19,9 @@ test('get package.json main entry when no version is specified', async t => {
 	t.is(json._id, 'pageres');
 });
 
-// test('get a single field', async t => {
-// 	const res = await fn.field('pageres', 'description');
+test('get a single field', async t => {
+	const res = await fn.field('pageres', 'description');
 
-// 	t.true(res === 'string');
-// 	t.regexTest(/screenshots/, res);
-// });
+	t.true(typeof res === 'string');
+	t.regexTest(/screenshots/, res);
+});
