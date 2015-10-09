@@ -32,7 +32,7 @@ packageJson('@company/package', 'latest').then(json => {
 
 ### packageJson(name, [version])
 
-You can optionally specify a version (e.g. `0.1.0`) or `latest`.  
+You can optionally specify a version (e.g. `1.0.0`) or `latest`.  
 If you don't specify a version you'll get the [main entry](http://registry.npmjs.org/pageres/) containing all versions.
 
 

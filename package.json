@@ -31,7 +31,7 @@
   ],
   "dependencies": {
     "got": "^4.2.0",
-    "registry-url": "^3.0.0"
+    "registry-url": "^3.0.3"
   },
   "devDependencies": {
     "ava": "*",

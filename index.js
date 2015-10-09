@@ -3,7 +3,8 @@ var got = require('got');
 var registryUrl = require('registry-url');
 
 module.exports = function (name, version) {
-	var url = registryUrl(name.split('/')[0]) + name;
+	var url = registryUrl(name.split('/')[0]) +
+		encodeURIComponent(name).replace(/^%40/, '@');
 
 	return got(url, {json: true})
 		.then(function (res) {
