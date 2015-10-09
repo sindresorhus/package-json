@@ -8,7 +8,7 @@ function get(url) {
 			return res.body;
 		})
 		.catch(function (err) {
-			if (err.code === 404) {
+			if (err.statusCode === 404) {
 				throw new Error('Package or version doesn\'t exist');
 			}
 
@@ -19,11 +19,7 @@ function get(url) {
 module.exports = function (name, version) {
 	var url = registryUrl(name.split('/')[0]) + name + '/';
 
-	if (typeof version !== 'string') {
-		version = '';
-	}
-
-	return get(url + version);
+	return get(url + (version || ''));
 };
 
 module.exports.field = function (name, field) {

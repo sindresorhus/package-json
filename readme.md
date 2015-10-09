@@ -17,13 +17,13 @@ const packageJson = require('package-json');
 
 packageJson('pageres', 'latest').then(json => {
 	console.log(json);
-	//=> { name: 'pageres', ... }
+	//=> {name: 'pageres', ...}
 });
 
 // also works with scoped packages
 packageJson('@company/package', 'latest').then(json => {
 	console.log(json);
-	//=> { name: 'package', ... }
+	//=> {name: 'package', ...}
 });
 
 packageJson.field('pageres', 'description').then(field => {
@@ -35,14 +35,14 @@ packageJson.field('pageres', 'description').then(field => {
 
 ## API
 
-### packageJson(name, [version], callback)
+### packageJson(name, [version])
 
 You can optionally specify a version (e.g. `0.1.0`) or `latest`.  
 If you don't specify a version you'll get the [main entry](http://registry.npmjs.org/pageres/) containing all versions.
 
-### packageJson.field(name, field, callback)
+### packageJson.field(name, field)
 
-Get a specific field in the `package.json`.
+Get a specific field in the package.json.
 
 
 ## Related
