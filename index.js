@@ -2,10 +2,20 @@
 var got = require('got');
 var registryUrl = require('registry-url');
 
-function get(url) {
+module.exports = function (name, version) {
+	var url = registryUrl(name.split('/')[0]) + name;
+
 	return got(url, {json: true})
 		.then(function (res) {
-			return res.body;
+			var data = res.body;
+
+			if (version === 'latest') {
+				data = data.versions[data['dist-tags'].latest];
+			} else if (version) {
+				data = data.versions[version];
+			}
+
+			return data;
 		})
 		.catch(function (err) {
 			if (err.statusCode === 404) {
@@ -14,10 +24,4 @@ function get(url) {
 
 			throw err;
 		});
-}
-
-module.exports = function (name, version) {
-	var url = registryUrl(name.split('/')[0]) + name + '/';
-
-	return get(url + (version || ''));
 };
