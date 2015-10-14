@@ -1,12 +1,24 @@
 'use strict';
 var got = require('got');
 var registryUrl = require('registry-url');
+var rc = require('rc');
 
 module.exports = function (name, version) {
-	var url = registryUrl(name.split('/')[0]) +
+	var scope = name.split('/')[0];
+	var url = registryUrl(scope) +
 		encodeURIComponent(name).replace(/^%40/, '@');
+	var npmrc = rc('npm');
+	var token = npmrc[scope + ':_authToken'] || npmrc['//registry.npmjs.org/:_authToken'];
+	var headers = {};
 
-	return got(url, {json: true})
+	if (token) {
+		headers.authorization = 'Bearer ' + token;
+	}
+
+	return got(url, {
+		json: true,
+		headers: headers
+	})
 		.then(function (res) {
 			var data = res.body;
 
