@@ -1,6 +1,6 @@
 {
   "name": "package-json",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Get the package.json of a package from the npm registry",
   "license": "MIT",
   "repository": "sindresorhus/package-json",
