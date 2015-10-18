@@ -30,7 +30,7 @@
     "scoped"
   ],
   "dependencies": {
-    "got": "^4.2.0",
+    "got": "^5.0.0",
     "rc": "^1.1.2",
     "registry-url": "^3.0.3"
   },
