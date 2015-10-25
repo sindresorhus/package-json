@@ -12,6 +12,10 @@ module.exports = function (name, version) {
 	var headers = {};
 
 	if (token) {
+		if (process.env.NPM_TOKEN) {
+			token = token.replace('${NPM_TOKEN}', process.env.NPM_TOKEN);
+		}
+
 		headers.authorization = 'Bearer ' + token;
 	}
 
