@@ -30,13 +30,17 @@ module.exports = function (name, version) {
 				data = data.versions[data['dist-tags'].latest];
 			} else if (version) {
 				data = data.versions[version];
+
+				if (!data) {
+					throw new Error('Version doesn\'t exist');
+				}
 			}
 
 			return data;
 		})
 		.catch(function (err) {
 			if (err.statusCode === 404) {
-				throw new Error('Package or version doesn\'t exist');
+				throw new Error('Package doesn\'t exist');
 			}
 
 			throw err;

@@ -32,3 +32,7 @@ test('scoped - specific version', async t => {
 	const json = await fn('@sindresorhus/df', '1.0.1');
 	t.is(json.version, '1.0.1');
 });
+
+test('reject when version doesn\'t exist', async t => {
+	t.throws(fn('hapi', '6.6.6'), 'Version doesn\'t exist');
+});
