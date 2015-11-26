@@ -17,6 +17,41 @@ test('specific version', async t => {
 	t.is(json.version, '0.1.0');
 });
 
+test('incomplete version x', async t => {
+	const json = await fn('pageres', '0');
+	t.is(json.version.substr(0,2), '0.');
+});
+
+test('incomplete version x.y', async t => {
+	const json = await fn('pageres', '0.1');
+	t.is(json.version.substr(0,4), '0.1.');
+});
+
+test('caret version', async t => {
+	const json = await fn('got', '^5.0.0');
+	t.is(json.version.substr(0,2), '5.');
+});
+
+test('tilde version', async t => {
+	const json = await fn('got', '~5.0.0');
+	t.is(json.version.substr(0,4), '5.0.');
+});
+
+test('wildcard version *', async t => {
+	const json = await fn('got', '*');
+	t.is(json.version.split('.')[0] > 0, true);
+});
+
+test('wildcard version x.*', async t => {
+	const json = await fn('got', '5.*');
+	t.is(json.version.substr(0,2), '5.');
+});
+
+test('wildcard version x.y.*', async t => {
+	const json = await fn('got', '5.0.*');
+	t.is(json.version.substr(0,4), '5.0.');
+});
+
 test('scoped - full', async t => {
 	const json = await fn('@sindresorhus/df');
 	t.is(json.name, '@sindresorhus/df');

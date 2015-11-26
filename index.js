@@ -4,9 +4,11 @@ var registryUrl = require('registry-url');
 var rc = require('rc');
 
 module.exports = function (name, version) {
+	var isScoped = name.indexOf('/') > -1;
 	var scope = name.split('/')[0];
 	var url = registryUrl(scope) +
-		encodeURIComponent(name).replace(/^%40/, '@');
+		encodeURIComponent(name).replace(/^%40/, '@') +
+		(!isScoped && version ? '/' + version : '');
 	var npmrc = rc('npm');
 	var token = npmrc[scope + ':_authToken'] || npmrc['//registry.npmjs.org/:_authToken'];
 	var headers = {};
@@ -26,9 +28,9 @@ module.exports = function (name, version) {
 		.then(function (res) {
 			var data = res.body;
 
-			if (version === 'latest') {
+			if (isScoped && version === 'latest') {
 				data = data.versions[data['dist-tags'].latest];
-			} else if (version) {
+			} else if (isScoped && version) {
 				data = data.versions[version];
 
 				if (!data) {
