@@ -52,6 +52,15 @@ test('wildcard version x.y.*', async t => {
 	t.is(json.version.substr(0,4), '5.0.');
 });
 
+test('single version data the same as in main entry with all versions', async t => {
+	const full1 = await fn('got');
+	const single1 = await fn('got', '3.3.1');
+	t.same(full1.versions['3.3.1'], single1);
+	const full2 = await fn('express');
+	const single2 = await fn('express', '4.10.2');
+	t.same(full2.versions['4.10.2'], single2);
+});
+
 test('scoped - full', async t => {
 	const json = await fn('@sindresorhus/df');
 	t.is(json.name, '@sindresorhus/df');
