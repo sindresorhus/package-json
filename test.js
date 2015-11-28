@@ -53,15 +53,21 @@ test('wildcard version x.y.*', async t => {
 });
 
 test('data the same as in main entry with all versions for got', async t => {
-	const full1 = await fn('got');
-	const single1 = await fn('got', '3.3.1');
-	t.same(full1.versions['3.3.1'], single1);
+	t.plan(1);
+	const full = fn('got');
+	const single = fn('got', '3.3.1');
+	Promise.all([full, single]).then(function (m) {
+		t.same(m[0].versions['3.3.1'], m[1]);
+	});
 });
 
 test('data the same as in main entry with all versions for express', async t => {
-	const full2 = await fn('express');
-	const single2 = await fn('express', '4.10.2');
-	t.same(full2.versions['4.10.2'], single2);
+	t.plan(1);
+	const full = fn('express');
+	const single = fn('express', '4.10.2');
+	Promise.all([full, single]).then(function (m) {
+		t.same(m[0].versions['4.10.2'], m[1]);
+	});
 });
 
 test('scoped - full', async t => {
