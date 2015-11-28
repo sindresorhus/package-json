@@ -30,7 +30,7 @@ module.exports = function (name, version) {
 			if (version === 'latest') {
 				data = data.versions[data['dist-tags'].latest];
 			} else if (version) {
-				if (!semver.valid(version)) {
+				if (!data.versions[version]) {
 					var versions = Object.keys(data.versions)
 						.filter(function (v) {
 							return semver.satisfies(v, version);
