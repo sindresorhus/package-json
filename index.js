@@ -2,6 +2,7 @@
 var got = require('got');
 var registryUrl = require('registry-url');
 var rc = require('rc');
+var semver = require('semver');
 
 module.exports = function (name, version) {
 	var scope = name.split('/')[0];
@@ -29,6 +30,25 @@ module.exports = function (name, version) {
 			if (version === 'latest') {
 				data = data.versions[data['dist-tags'].latest];
 			} else if (version) {
+				if (!semver.valid(version)) {
+					var versions = Object.keys(data.versions)
+						.filter(function (v) {
+							return semver.satisfies(v, version);
+						});
+					if (versions.length === 0) {
+						throw new Error('Version doesn\'t exist');
+					} else {
+						version = versions.sort(function (a, b) {
+							if (semver.gt(a, b)) {
+								return -1;
+							}
+							if (semver.lt(a, b)) {
+								return 1;
+							}
+							return 0;
+						})[0];
+					}
+				}
 				data = data.versions[version];
 
 				if (!data) {

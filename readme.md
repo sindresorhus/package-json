@@ -35,6 +35,14 @@ packageJson('@company/package', 'latest').then(json => {
 You can optionally specify a version (e.g. `1.0.0`) or `latest`.  
 If you don't specify a version you'll get the [main entry](http://registry.npmjs.org/pageres/) containing all versions.
 
+The version can also be in the form that is often used in the package.json files:
+
+* `1` - get the latest `1.x.x`
+* `1.2` - get the latest `1.2.x`
+* `^1.2.3` - get the latest `1.x.x` but at least `1.2.3`
+* `~1.2.3` - get the latest `1.2.x` but at least `1.2.3`
+
+It works for both scoped and unscoped packages.
 
 ## Related
 
