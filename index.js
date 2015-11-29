@@ -31,22 +31,10 @@ module.exports = function (name, version) {
 				data = data.versions[data['dist-tags'].latest];
 			} else if (version) {
 				if (!data.versions[version]) {
-					var versions = Object.keys(data.versions)
-						.filter(function (v) {
-							return semver.satisfies(v, version);
-						});
-					if (versions.length === 0) {
+					var versions = Object.keys(data.versions);
+					version = semver.maxSatisfying(versions, version);
+					if (!version) {
 						throw new Error('Version doesn\'t exist');
-					} else {
-						version = versions.sort(function (a, b) {
-							if (semver.gt(a, b)) {
-								return -1;
-							}
-							if (semver.lt(a, b)) {
-								return 1;
-							}
-							return 0;
-						})[0];
 					}
 				}
 				data = data.versions[version];
