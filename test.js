@@ -17,6 +17,11 @@ test('specific version', async t => {
 	t.is(json.version, '0.1.0');
 });
 
+test('incomplete version x', async t => {
+	const json = await fn('pageres', '0');
+	t.is(json.version.substr(0,2), '0.');
+});
+
 test('scoped - full', async t => {
 	const json = await fn('@sindresorhus/df');
 	t.is(json.name, '@sindresorhus/df');
