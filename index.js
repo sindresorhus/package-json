@@ -2,6 +2,7 @@
 var got = require('got');
 var registryUrl = require('registry-url');
 var rc = require('rc');
+var semver = require('semver');
 
 module.exports = function (name, version) {
 	var scope = name.split('/')[0];
@@ -29,6 +30,15 @@ module.exports = function (name, version) {
 			if (version === 'latest') {
 				data = data.versions[data['dist-tags'].latest];
 			} else if (version) {
+				if (!data.versions[version]) {
+					var versions = Object.keys(data.versions);
+					version = semver.maxSatisfying(versions, version);
+
+					if (!version) {
+						throw new Error('Version doesn\'t exist');
+					}
+				}
+
 				data = data.versions[version];
 
 				if (!data) {
