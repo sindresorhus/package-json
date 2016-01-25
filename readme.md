@@ -44,10 +44,10 @@ The version can also be in any format supported by the [semver](https://www.npmj
 
 ## Related
 
-- [latest-version](https://github.com/sindresorhus/latest-version) - Get the latest version of a npm package
+- [latest-version](https://github.com/sindresorhus/latest-version) - Get the latest version of an npm package
 - [npm-keyword](https://github.com/sindresorhus/npm-keyword) - Get a list of npm packages with a certain keyword
-- [npm-user](https://github.com/sindresorhus/npm-user) - Get user info of a npm user
-- [npm-email](https://github.com/sindresorhus/npm-email) - Get the email of a npm user
+- [npm-user](https://github.com/sindresorhus/npm-user) - Get user info of an npm user
+- [npm-email](https://github.com/sindresorhus/npm-email) - Get the email of an npm user
 
 
 ## License
