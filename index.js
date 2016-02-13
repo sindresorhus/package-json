@@ -50,7 +50,7 @@ module.exports = function (name, version) {
 		})
 		.catch(function (err) {
 			if (err.statusCode === 404) {
-				throw new Error('Package doesn\'t exist');
+				throw new Error('Package `' + name + '` doesn\'t exist');
 			}
 
 			throw err;
