@@ -41,3 +41,7 @@ test('scoped - specific version', async t => {
 test('reject when version doesn\'t exist', async t => {
 	t.throws(fn('hapi', '6.6.6'), 'Version doesn\'t exist');
 });
+
+test('reject when package doesn\'t exist', async t => {
+	t.throws(fn('nnnope'), 'Package `nnnope` doesn\'t exist');
+});
