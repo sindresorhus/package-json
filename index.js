@@ -10,7 +10,8 @@ module.exports = function (name, version) {
 		encodeURIComponent(name).replace(/^%40/, '@');
 	var npmrc = rc('npm');
 	var token = npmrc[scope + ':_authToken'] || npmrc['//registry.npmjs.org/:_authToken'];
-	var headers = {}, auth;
+	var headers = {};
+	var auth;
 
 	if (token) {
 		if (process.env.NPM_TOKEN) {
@@ -18,8 +19,8 @@ module.exports = function (name, version) {
 		}
 
 		headers.authorization = 'Bearer ' + token;
-	} else if(npmrc._auth) {
-		auth = new Buffer(npmrc._auth, 'base64').toString('utf-8');
+	} else if (npmrc._auth) {
+		auth = new Buffer(npmrc._auth, 'base64').toString('utf8');
 	}
 
 	return got(url, {
