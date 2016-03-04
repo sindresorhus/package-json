@@ -11,6 +11,7 @@ module.exports = function (name, version) {
 	var npmrc = rc('npm');
 	var token = npmrc[scope + ':_authToken'] || npmrc['//registry.npmjs.org/:_authToken'];
 	var headers = {};
+	var auth;
 
 	if (token) {
 		if (process.env.NPM_TOKEN) {
@@ -18,11 +19,14 @@ module.exports = function (name, version) {
 		}
 
 		headers.authorization = 'Bearer ' + token;
+	} else if (npmrc._auth) {
+		auth = new Buffer(npmrc._auth, 'base64').toString('utf8');
 	}
 
 	return got(url, {
 		json: true,
-		headers: headers
+		headers: headers,
+		auth: auth
 	})
 		.then(function (res) {
 			var data = res.body;
