@@ -1,4 +1,5 @@
 'use strict';
+var url = require('url');
 var got = require('got');
 var registryUrl = require('registry-url');
 var rc = require('rc');
@@ -6,8 +7,7 @@ var semver = require('semver');
 
 module.exports = function (name, version) {
 	var scope = name.split('/')[0];
-	var url = registryUrl(scope) +
-		encodeURIComponent(name).replace(/^%40/, '@');
+	var pkgUrl = url.resolve(registryUrl(scope), encodeURIComponent(name).replace(/^%40/, '@'));
 	var npmrc = rc('npm');
 	var token = npmrc[scope + ':_authToken'] || npmrc['//registry.npmjs.org/:_authToken'];
 	var headers = {};
@@ -20,7 +20,7 @@ module.exports = function (name, version) {
 		headers.authorization = 'Bearer ' + token;
 	}
 
-	return got(url, {
+	return got(pkgUrl, {
 		json: true,
 		headers: headers
 	})
