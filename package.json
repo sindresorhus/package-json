@@ -31,12 +31,13 @@
   ],
   "dependencies": {
     "got": "^5.0.0",
-    "rc": "^1.1.2",
+    "registry-auth-token": "^3.0.1",
     "registry-url": "^3.0.3",
     "semver": "^5.1.0"
   },
   "devDependencies": {
     "ava": "*",
+    "mock-private-registry": "^1.1.0",
     "xo": "*"
   }
 }
