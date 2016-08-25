@@ -42,6 +42,12 @@ The version can also be in any format supported by the [semver](https://www.npmj
 - `^1.2.3` - get the latest `1.x.x` but at least `1.2.3`
 - `~1.2.3` - get the latest `1.2.x` but at least `1.2.3`
 
+
+## Authentication
+
+Both public and private registries are supported, for both scoped and unscoped packages, as long as the registry uses either bearer tokens or basic authentication.
+
+
 ## Related
 
 - [package-json-cli](https://github.com/sindresorhus/package-json-cli) - CLI for this module

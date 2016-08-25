@@ -2,27 +2,18 @@
 var url = require('url');
 var got = require('got');
 var registryUrl = require('registry-url');
-var rc = require('rc');
+var registryAuthToken = require('registry-auth-token');
 var semver = require('semver');
 
 module.exports = function (name, version) {
 	var scope = name.split('/')[0];
-	var pkgUrl = url.resolve(registryUrl(scope), encodeURIComponent(name).replace(/^%40/, '@'));
-	var npmrc = rc('npm');
-
-	var token;
-	if (!npmrc.registry || url.parse(npmrc.registry).hostname === 'registry.npmjs.org') {
-		token = npmrc[scope + ':_authToken'] || npmrc['//registry.npmjs.org/:_authToken'];
-	}
-
+	var regUrl = registryUrl(scope);
+	var pkgUrl = url.resolve(regUrl, encodeURIComponent(name).replace(/^%40/, '@'));
+	var authInfo = registryAuthToken(regUrl);
 	var headers = {};
 
-	if (token) {
-		if (process.env.NPM_TOKEN) {
-			token = token.replace('${NPM_TOKEN}', process.env.NPM_TOKEN);
-		}
-
-		headers.authorization = 'Bearer ' + token;
+	if (authInfo) {
+		headers.authorization = authInfo.type + ' ' + authInfo.token;
 	}
 
 	return got(pkgUrl, {
