@@ -10,7 +10,7 @@
     "url": "sindresorhus.com"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=4"
   },
   "scripts": {
     "test": "xo && ava"
@@ -30,7 +30,7 @@
     "scoped"
   ],
   "dependencies": {
-    "got": "^5.0.0",
+    "got": "^6.7.1",
     "registry-auth-token": "^3.0.1",
     "registry-url": "^3.0.3",
     "semver": "^5.1.0"
