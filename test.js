@@ -40,6 +40,11 @@ test('scoped - specific version', async t => {
 	t.is(json.version, '1.0.1');
 });
 
+test('scoped - dist tag', async t => {
+	const json = await m('@rexxars/npmtest', 'next');
+	t.is(json.version, '2.0.0');
+});
+
 test('reject when version doesn\'t exist', async t => {
 	t.throws(m('hapi', '6.6.6'), 'Version doesn\'t exist');
 });
@@ -50,7 +55,7 @@ test('reject when package doesn\'t exist', async t => {
 
 test.cb('does not send any auth token for unconfigured registries', t => {
 	const server = http.createServer((req, res) => {
-		res.end(JSON.stringify({headers: req.headers}));
+		res.end(JSON.stringify({headers: req.headers, 'dist-tags': {}}));
 	});
 
 	server.listen(63144, '127.0.0.1', async () => {
