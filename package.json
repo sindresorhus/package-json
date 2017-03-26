@@ -1,7 +1,7 @@
 {
   "name": "package-json",
   "version": "3.1.0",
-  "description": "Get the package.json of a package from the npm registry",
+  "description": "Get metadata of a package from the npm registry",
   "license": "MIT",
   "repository": "sindresorhus/package-json",
   "author": {
