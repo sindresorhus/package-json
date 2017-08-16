@@ -30,7 +30,7 @@
     "scoped"
   ],
   "dependencies": {
-    "got": "^6.7.1",
+    "phin": "^2.2.4",
     "registry-auth-token": "^3.0.1",
     "registry-url": "^3.0.3",
     "semver": "^5.1.0"
