@@ -1,4 +1,6 @@
 import http from 'http';
+import https from 'https';
+import selfsigned from 'selfsigned';
 import test from 'ava';
 import privateRegistry from 'mock-private-registry/promise';
 import m from '.';
@@ -102,4 +104,32 @@ test('private registry (basic token)', async t => {
 	const json = await m('@mockscope2/foobar');
 	t.is(json.name, '@mockscope2/foobar');
 	server.close();
+});
+
+test.cb('gotOptions.rejectUnauthorized = false disables server cert validation', t => {
+	const keyPair = selfsigned.generate();
+	const options = {
+		key: keyPair.private,
+		cert: keyPair.cert
+	};
+
+	const server = https.createServer(options, (req, res) => {
+		res.end(JSON.stringify({headers: req.headers, 'dist-tags': {}}));
+	});
+
+	server.listen(63145, '127.0.0.1', async () => {
+		let json;
+		let error;
+		try {
+			json = await m('@mockscope4/foobar', {allVersions: true, gotOptions: {rejectUnauthorized: false}});
+		} catch (e) {
+			error = e;
+		} finally {
+			server.close(t.end);
+		}
+		t.falsy(error);
+		if (json) {
+			t.is(json.headers.host, 'localhost:63145');
+		}
+	});
 });

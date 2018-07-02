@@ -38,6 +38,7 @@
 	"devDependencies": {
 		"ava": "*",
 		"mock-private-registry": "^1.1.2",
+		"selfsigned": "^1.10.3",
 		"xo": "*"
 	}
 }
