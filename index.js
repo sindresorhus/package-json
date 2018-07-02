@@ -27,7 +27,9 @@ module.exports = (name, options) => {
 		headers.authorization = `${authInfo.type} ${authInfo.token}`;
 	}
 
-	return got(pkgUrl, {json: true, headers})
+	options.gotOptions = options.gotOptions || {};
+
+	return got(pkgUrl, Object.assign({json: true, headers}, options.gotOptions))
 		.then(res => {
 			let data = res.body;
 			let {version} = options;
