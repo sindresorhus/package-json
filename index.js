@@ -6,14 +6,14 @@ const registryAuthToken = require('registry-auth-token');
 const semver = require('semver');
 
 module.exports = (name, options) => {
-	const scope = name.split('/')[0];
-	const regUrl = registryUrl(scope);
-	const pkgUrl = url.resolve(regUrl, encodeURIComponent(name).replace(/^%40/, '@'));
-	const authInfo = registryAuthToken(regUrl, {recursive: true});
-
 	options = Object.assign({
 		version: 'latest'
 	}, options);
+
+	const scope = name.split('/')[0];
+	const regUrl = options.registryUrl || registryUrl(scope);
+	const pkgUrl = url.resolve(regUrl, encodeURIComponent(name).replace(/^%40/, '@'));
+	const authInfo = registryAuthToken(regUrl, {recursive: true});
 
 	const headers = {
 		accept: 'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*'
