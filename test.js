@@ -65,12 +65,12 @@ test('scoped - dist tag', async t => {
 	t.is(json.version, '2.0.0');
 });
 
-test('reject when version doesn\'t exist', async t => {
-	await t.throwsAsync(packageJson('hapi', {version: '6.6.6'}), 'Version doesn\'t exist');
+test('reject when package doesn\'t exist', async t => {
+	await t.throwsAsync(packageJson('nnnope'), {instanceOf: packageJson.PackageNotFoundError});
 });
 
-test('reject when package doesn\'t exist', async t => {
-	await t.throwsAsync(packageJson('nnnope'), 'Package `nnnope` could not be found');
+test('reject when version doesn\'t exist', async t => {
+	await t.throwsAsync(packageJson('hapi', {version: '6.6.6'}), {instanceOf: packageJson.VersionNotFoundError});
 });
 
 test('does not send any auth token for unconfigured registries', async t => {

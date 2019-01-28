@@ -5,6 +5,20 @@ const registryUrl = require('registry-url');
 const registryAuthToken = require('registry-auth-token');
 const semver = require('semver');
 
+class PackageNotFoundError extends Error {
+	constructor(packageName) {
+		super(`Package \`${packageName}\` could not be found`);
+		this.name = 'PackageNotFoundError';
+	}
+}
+
+class VersionNotFoundError extends Error {
+	constructor(packageName, version) {
+		super(`Version \`${version}\` for package \`${packageName}\` could not be found`);
+		this.name = 'VersionNotFoundError';
+	}
+}
+
 module.exports = async (name, options) => {
 	options = {
 		version: 'latest',
@@ -33,7 +47,7 @@ module.exports = async (name, options) => {
 		response = await got(pkgUrl, {json: true, headers});
 	} catch (error) {
 		if (error.statusCode === 404) {
-			throw new Error(`Package \`${name}\` doesn't exist`);
+			throw new PackageNotFoundError(name);
 		}
 
 		throw error;
@@ -46,6 +60,7 @@ module.exports = async (name, options) => {
 	}
 
 	let {version} = options;
+	const versionError = new VersionNotFoundError(name, version);
 
 	if (data['dist-tags'][version]) {
 		data = data.versions[data['dist-tags'][version]];
@@ -55,16 +70,20 @@ module.exports = async (name, options) => {
 			version = semver.maxSatisfying(versions, version);
 
 			if (!version) {
-				throw new Error('Version doesn\'t exist');
+				throw versionError;
 			}
 		}
 
 		data = data.versions[version];
 
 		if (!data) {
-			throw new Error('Version doesn\'t exist');
+			throw versionError;
 		}
 	}
 
 	return data;
 };
+
+module.exports.PackageNotFoundError = PackageNotFoundError;
+
+module.exports.VersionNotFoundError = VersionNotFoundError;
