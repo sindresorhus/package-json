@@ -67,6 +67,14 @@ Default: `false`
 
 Return the [main entry](https://registry.npmjs.org/ava) containing all versions.
 
+### packageJson.PackageNotFoundError
+
+The error thrown when the given package name cannot be found.
+
+### packageJson.VersionNotFoundError
+
+The error thrown when the given package version cannot be found.
+
 
 ## Authentication
 

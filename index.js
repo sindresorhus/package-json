@@ -1,19 +1,34 @@
 'use strict';
-const url = require('url');
+const {URL} = require('url');
 const got = require('got');
 const registryUrl = require('registry-url');
 const registryAuthToken = require('registry-auth-token');
 const semver = require('semver');
 
-module.exports = (name, options) => {
-	options = Object.assign({
-		version: 'latest'
-	}, options);
+class PackageNotFoundError extends Error {
+	constructor(packageName) {
+		super(`Package \`${packageName}\` could not be found`);
+		this.name = 'PackageNotFoundError';
+	}
+}
+
+class VersionNotFoundError extends Error {
+	constructor(packageName, version) {
+		super(`Version \`${version}\` for package \`${packageName}\` could not be found`);
+		this.name = 'VersionNotFoundError';
+	}
+}
+
+module.exports = async (name, options) => {
+	options = {
+		version: 'latest',
+		...options
+	};
 
 	const scope = name.split('/')[0];
 	const regUrl = options.registryUrl || registryUrl(scope);
-	const pkgUrl = url.resolve(regUrl, encodeURIComponent(name).replace(/^%40/, '@'));
-	const authInfo = registryAuthToken(regUrl, {recursive: true});
+	const pkgUrl = new URL(encodeURIComponent(name).replace(/^%40/, '@'), regUrl);
+	const authInfo = registryAuthToken(regUrl.toString(), {recursive: true});
 
 	const headers = {
 		accept: 'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*'
@@ -27,41 +42,48 @@ module.exports = (name, options) => {
 		headers.authorization = `${authInfo.type} ${authInfo.token}`;
 	}
 
-	return got(pkgUrl, {json: true, headers})
-		.then(res => {
-			let data = res.body;
-			let {version} = options;
+	let response;
+	try {
+		response = await got(pkgUrl, {json: true, headers});
+	} catch (error) {
+		if (error.statusCode === 404) {
+			throw new PackageNotFoundError(name);
+		}
 
-			if (options.allVersions) {
-				return data;
+		throw error;
+	}
+
+	let data = response.body;
+
+	if (options.allVersions) {
+		return data;
+	}
+
+	let {version} = options;
+	const versionError = new VersionNotFoundError(name, version);
+
+	if (data['dist-tags'][version]) {
+		data = data.versions[data['dist-tags'][version]];
+	} else if (version) {
+		if (!data.versions[version]) {
+			const versions = Object.keys(data.versions);
+			version = semver.maxSatisfying(versions, version);
+
+			if (!version) {
+				throw versionError;
 			}
+		}
 
-			if (data['dist-tags'][version]) {
-				data = data.versions[data['dist-tags'][version]];
-			} else if (version) {
-				if (!data.versions[version]) {
-					const versions = Object.keys(data.versions);
-					version = semver.maxSatisfying(versions, version);
+		data = data.versions[version];
 
-					if (!version) {
-						throw new Error('Version doesn\'t exist');
-					}
-				}
+		if (!data) {
+			throw versionError;
+		}
+	}
 
-				data = data.versions[version];
-
-				if (!data) {
-					throw new Error('Version doesn\'t exist');
-				}
-			}
-
-			return data;
-		})
-		.catch(err => {
-			if (err.statusCode === 404) {
-				throw new Error(`Package \`${name}\` doesn't exist`);
-			}
-
-			throw err;
-		});
+	return data;
 };
+
+module.exports.PackageNotFoundError = PackageNotFoundError;
+
+module.exports.VersionNotFoundError = VersionNotFoundError;
