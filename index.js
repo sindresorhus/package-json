@@ -8,7 +8,7 @@ const registryAuthToken = require('registry-auth-token');
 const semver = require('semver');
 
 // These agent options are chosen to match the npm client defaults and help with performance
-// see: `npm config get maxsockets` and #50
+// See: `npm config get maxsockets` and #50
 const agentOptions = {
 	keepAlive: true,
 	maxSockets: 50
@@ -30,17 +30,16 @@ class VersionNotFoundError extends Error {
 	}
 }
 
-const packageJson = async (name, options) => {
+const packageJson = async (packageName, options) => {
 	options = {
 		version: 'latest',
-		registryUrl: null,
 		...options
 	};
 
-	const scope = name.split('/')[0];
-	const regUrl = options.registryUrl || registryUrl(scope);
-	const pkgUrl = new URL(encodeURIComponent(name).replace(/^%40/, '@'), regUrl);
-	const authInfo = registryAuthToken(regUrl.toString(), {recursive: true});
+	const scope = packageName.split('/')[0];
+	const registryUrl_ = options.registryUrl || registryUrl(scope);
+	const packageUrl = new URL(encodeURIComponent(packageName).replace(/^%40/, '@'), registryUrl_);
+	const authInfo = registryAuthToken(registryUrl_.toString(), {recursive: true});
 
 	const headers = {
 		accept: 'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*'
@@ -54,20 +53,21 @@ const packageJson = async (name, options) => {
 		headers.authorization = `${authInfo.type} ${authInfo.token}`;
 	}
 
+	const gotOptions = {
+		json: true,
+		headers,
+		agent: {
+			http: httpAgent,
+			https: httpsAgent
+		}
+	};
+
 	let response;
 	try {
-		const gotOptions = {
-			json: true,
-			headers,
-			agent: {
-				http: httpAgent,
-				https: httpsAgent
-			}
-		};
-		response = await got(pkgUrl, gotOptions);
+		response = await got(packageUrl, gotOptions);
 	} catch (error) {
 		if (error.statusCode === 404) {
-			throw new PackageNotFoundError(name);
+			throw new PackageNotFoundError(packageName);
 		}
 
 		throw error;
@@ -80,7 +80,7 @@ const packageJson = async (name, options) => {
 	}
 
 	let {version} = options;
-	const versionError = new VersionNotFoundError(name, version);
+	const versionError = new VersionNotFoundError(packageName, version);
 
 	if (data['dist-tags'][version]) {
 		data = data.versions[data['dist-tags'][version]];
@@ -106,7 +106,5 @@ const packageJson = async (name, options) => {
 
 module.exports = packageJson;
 module.exports.default = packageJson;
-
 module.exports.PackageNotFoundError = PackageNotFoundError;
-
 module.exports.VersionNotFoundError = VersionNotFoundError;

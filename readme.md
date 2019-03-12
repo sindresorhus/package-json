@@ -27,9 +27,9 @@ const packageJson = require('package-json');
 
 ## API
 
-### packageJson(name, [options])
+### packageJson(packageName, [options])
 
-#### name
+#### packageName
 
 Type: `string`
 
@@ -67,14 +67,12 @@ Default: `false`
 
 Return the [main entry](https://registry.npmjs.org/ava) containing all versions.
 
-##### `registryUrl`
+##### registryUrl
 
-Type: string<br>
-Default: `null`
+Type: `string`<br>
+Default: Auto-detected
 
-It's usually https://registry.npmjs.org/, but it's configurable in .npmrc.
-
-Note: This option is intended for internal tools, you should prefer just using .npmrc whenever possible.
+The registry URL is by default inferred from the npm defaults and `.npmrc`. This is beneficial as `package-json` and any project using it will work just like npm. This option is **only** intended for internal tools. You should **not** use this option in reusable packages. Prefer just using `.npmrc` whenever possible.
 
 ### packageJson.PackageNotFoundError
 

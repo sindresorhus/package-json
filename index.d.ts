@@ -25,6 +25,11 @@ export interface Options {
 	 * @default false
 	 */
 	readonly allVersions?: boolean;
+
+	/**
+	 * The registry URL is by default inferred from the npm defaults and `.npmrc`. This is beneficial as `package-json` and any project using it will work just like npm. This option is **only** intended for internal tools. You should **not** use this option in reusable packages. Prefer just using `.npmrc` whenever possible.
+	 */
+	readonly registryUrl?: string;
 }
 
 export interface FullMetadataOptions extends Options {
@@ -122,24 +127,26 @@ export interface FullVersion extends AbbreviatedVersion, HoistedData {
 
 /**
  * Get metadata of a package from the npm registry.
- *
- * @param name - Name of the package.
  */
 export default function packageJson(
-	name: string,
+	packageName: string,
 	options: FullMetadataOptions
 ): Promise<FullMetadata>;
 export default function packageJson(
-	name: string,
+	packageName: string,
 	options?: Options
 ): Promise<AbbreviatedMetadata>;
 
 /**
  * The error thrown when the given package name cannot be found.
  */
-export class PackageNotFoundError extends Error {}
+export class PackageNotFoundError extends Error {
+	readonly name: 'PackageNotFoundError'
+}
 
 /**
  * The error thrown when the given package version cannot be found.
  */
-export class VersionNotFoundError extends Error {}
+export class VersionNotFoundError extends Error {
+	readonly name: 'VersionNotFoundError'
+}
