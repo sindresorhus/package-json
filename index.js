@@ -33,11 +33,12 @@ class VersionNotFoundError extends Error {
 const packageJson = async (name, options) => {
 	options = {
 		version: 'latest',
+		registryUrl: null,
 		...options
 	};
 
 	const scope = name.split('/')[0];
-	const regUrl = registryUrl(scope);
+	const regUrl = options.registryUrl || registryUrl(scope);
 	const pkgUrl = new URL(encodeURIComponent(name).replace(/^%40/, '@'), regUrl);
 	const authInfo = registryAuthToken(regUrl.toString(), {recursive: true});
 

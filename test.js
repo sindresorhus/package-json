@@ -35,6 +35,12 @@ test('incomplete version x', async t => {
 	t.is(json.version.substr(0, 2), '0.');
 });
 
+test('custom registry url', async t => {
+	const json = await packageJson('ava', {registryUrl: 'http://registry.node-modules.io/'});
+	t.is(json.name, 'ava');
+	t.falsy(json.versions);
+});
+
 test('scoped - latest version', async t => {
 	const json = await packageJson('@sindresorhus/df');
 	t.is(json.name, '@sindresorhus/df');
