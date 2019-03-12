@@ -19,7 +19,7 @@ class VersionNotFoundError extends Error {
 	}
 }
 
-module.exports = async (name, options) => {
+const packageJson = async (name, options) => {
 	options = {
 		version: 'latest',
 		...options
@@ -83,6 +83,9 @@ module.exports = async (name, options) => {
 
 	return data;
 };
+
+module.exports = packageJson;
+module.exports.default = packageJson;
 
 module.exports.PackageNotFoundError = PackageNotFoundError;
 
