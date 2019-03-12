@@ -67,6 +67,15 @@ Default: `false`
 
 Return the [main entry](https://registry.npmjs.org/ava) containing all versions.
 
+##### `registryUrl`
+
+Type: string<br>
+Default: `null`
+
+It's usually https://registry.npmjs.org/, but it's configurable in .npmrc.
+
+Note: This option is intended for internal tools, you should prefer just using .npmrc whenever possible.
+
 ### packageJson.PackageNotFoundError
 
 The error thrown when the given package name cannot be found.

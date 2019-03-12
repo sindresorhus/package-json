@@ -22,6 +22,7 @@ class VersionNotFoundError extends Error {
 module.exports = async (name, options) => {
 	options = {
 		version: 'latest',
+		registryUrl: null,
 		...options
 	};
 
