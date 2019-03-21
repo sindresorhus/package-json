@@ -1,3 +1,6 @@
+import {Agent as HttpAgent} from 'http';
+import {Agent as HttpsAgent} from 'https';
+
 export interface Options {
 	/**
 	 * Package version such as `1.0.0` or a [dist tag](https://docs.npmjs.com/cli/dist-tag) such as `latest`.
@@ -30,6 +33,11 @@ export interface Options {
 	 * The registry URL is by default inferred from the npm defaults and `.npmrc`. This is beneficial as `package-json` and any project using it will work just like npm. This option is **only** intended for internal tools. You should **not** use this option in reusable packages. Prefer just using `.npmrc` whenever possible.
 	 */
 	readonly registryUrl?: string;
+
+	/**
+	 * Overwrite the `agent` that is passed down to [`got`](https://github.com/sindresorhus/got#agent). This might be useful to add [proxy support](https://github.com/sindresorhus/got#proxies).
+	 */
+	readonly agent?: http.Agent | boolean | AgentOptions;
 }
 
 export interface FullMetadataOptions extends Options {
@@ -123,6 +131,11 @@ export interface FullVersion extends AbbreviatedVersion, HoistedData {
 	readonly types?: string;
 	readonly typings?: string;
 	readonly [key: string]: unknown;
+}
+
+export interface AgentOptions {
+	http: HttpAgent;
+	https: HttpsAgent;
 }
 
 /**
