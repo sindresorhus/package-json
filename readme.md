@@ -76,7 +76,7 @@ The registry URL is by default inferred from the npm defaults and `.npmrc`. This
 
 ##### agent
 
-Type: `object`
+Type: `Object`
 
 Overwrite the `agent` that is passed down to [`got`](https://github.com/sindresorhus/got#agent).
 
