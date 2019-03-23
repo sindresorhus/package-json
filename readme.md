@@ -76,9 +76,9 @@ The registry URL is by default inferred from the npm defaults and `.npmrc`. This
 
 ##### agent
 
-Type: `Object`
+Type: `http.Agent | https.Agent | Object | false`
 
-Overwrite the `agent` that is passed down to [`got`](https://github.com/sindresorhus/got#agent). This might be useful to add [proxy support](https://github.com/sindresorhus/got#proxies).
+Overwrite the `agent` option that is passed down to [`got`](https://github.com/sindresorhus/got#agent). This might be useful to add [proxy support](https://github.com/sindresorhus/got#proxies).
 
 
 ### packageJson.PackageNotFoundError
