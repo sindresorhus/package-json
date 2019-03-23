@@ -1,6 +1,11 @@
 import {Agent as HttpAgent} from 'http';
 import {Agent as HttpsAgent} from 'https';
 
+export interface AgentOptions {
+	http?: HttpAgent;
+	https?: HttpsAgent;
+}
+
 export interface Options {
 	/**
 	 * Package version such as `1.0.0` or a [dist tag](https://docs.npmjs.com/cli/dist-tag) such as `latest`.
@@ -37,7 +42,7 @@ export interface Options {
 	/**
 	 * Overwrite the `agent` that is passed down to [`got`](https://github.com/sindresorhus/got#agent). This might be useful to add [proxy support](https://github.com/sindresorhus/got#proxies).
 	 */
-	readonly agent?: http.Agent | boolean | AgentOptions;
+	readonly agent?: HttpAgent | HttpsAgent | boolean | AgentOptions;
 }
 
 export interface FullMetadataOptions extends Options {
@@ -131,11 +136,6 @@ export interface FullVersion extends AbbreviatedVersion, HoistedData {
 	readonly types?: string;
 	readonly typings?: string;
 	readonly [key: string]: unknown;
-}
-
-export interface AgentOptions {
-	http: HttpAgent;
-	https: HttpsAgent;
 }
 
 /**
