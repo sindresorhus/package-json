@@ -1,7 +1,7 @@
 import {Agent as HttpAgent} from 'http';
 import {Agent as HttpsAgent} from 'https';
 
-export interface AgentOptions {
+export interface Agents {
 	http?: HttpAgent;
 	https?: HttpsAgent;
 }
@@ -40,9 +40,9 @@ export interface Options {
 	readonly registryUrl?: string;
 
 	/**
-	 * Overwrite the `agent` that is passed down to [`got`](https://github.com/sindresorhus/got#agent). This might be useful to add [proxy support](https://github.com/sindresorhus/got#proxies).
+	 * Overwrite the `agent` option that is passed down to [`got`](https://github.com/sindresorhus/got#agent). This might be useful to add [proxy support](https://github.com/sindresorhus/got#proxies).
 	 */
-	readonly agent?: HttpAgent | HttpsAgent | AgentOptions | false;
+	readonly agent?: HttpAgent | HttpsAgent | Agents | false;
 }
 
 export interface FullMetadataOptions extends Options {
