@@ -42,7 +42,7 @@ export interface Options {
 	/**
 	 * Overwrite the `agent` that is passed down to [`got`](https://github.com/sindresorhus/got#agent). This might be useful to add [proxy support](https://github.com/sindresorhus/got#proxies).
 	 */
-	readonly agent?: HttpAgent | HttpsAgent | boolean | AgentOptions;
+	readonly agent?: HttpAgent | HttpsAgent | AgentOptions | false;
 }
 
 export interface FullMetadataOptions extends Options {
