@@ -62,6 +62,10 @@ const packageJson = async (packageName, options) => {
 		}
 	};
 
+	if (options.agent) {
+		gotOptions.agent = options.agent;
+	}
+
 	let response;
 	try {
 		response = await got(packageUrl, gotOptions);
