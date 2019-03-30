@@ -109,6 +109,7 @@ const packageJson = async (packageName, options) => {
 };
 
 module.exports = packageJson;
+// TODO: remove this in the next major version
 module.exports.default = packageJson;
 module.exports.PackageNotFoundError = PackageNotFoundError;
 module.exports.VersionNotFoundError = VersionNotFoundError;
