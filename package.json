@@ -1,6 +1,6 @@
 {
 	"name": "package-json",
-	"version": "6.2.0",
+	"version": "6.3.0",
 	"description": "Get metadata of a package from the npm registry",
 	"license": "MIT",
 	"repository": "sindresorhus/package-json",
