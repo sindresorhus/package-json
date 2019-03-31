@@ -1,5 +1,6 @@
-import {expectType} from 'tsd-check';
-import packageJson, {
+import {expectType} from 'tsd';
+import packageJson = require('.');
+import {
 	FullMetadata,
 	FullVersion,
 	AbbreviatedMetadata,
@@ -26,3 +27,11 @@ expectType<FullVersion>(fullMetadata.versions['1.2.3']);
 
 expectType<typeof PackageNotFoundError>(PackageNotFoundError);
 expectType<typeof VersionNotFoundError>(VersionNotFoundError);
+
+const packageNotFoundError = new PackageNotFoundError('foo');
+packageNotFoundError instanceof PackageNotFoundError;
+expectType<PackageNotFoundError>(packageNotFoundError);
+
+const versionNotFoundError = new VersionNotFoundError('foo', 'bar');
+versionNotFoundError instanceof VersionNotFoundError;
+expectType<VersionNotFoundError>(versionNotFoundError);
