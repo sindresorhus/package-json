@@ -96,7 +96,7 @@ declare namespace packageJson {
 		readonly bundleDependencies?: {readonly [name: string]: string};
 		readonly peerDependencies?: {readonly [name: string]: string};
 		readonly bin?: {readonly [key: string]: string};
-		readonly directories?: ReadonlyArray<string>;
+		readonly directories?: readonly string[];
 		readonly engines?: {readonly [type: string]: string};
 		readonly _hasShrinkwrap?: boolean;
 		readonly [key: string]: unknown;
@@ -113,12 +113,12 @@ declare namespace packageJson {
 		readonly bugs?:
 			| {readonly url: string; readonly email?: string}
 			| {readonly url?: string; readonly email: string};
-		readonly contributors?: ReadonlyArray<Person>;
+		readonly contributors?: readonly Person[];
 		readonly description?: string;
 		readonly homepage?: string;
-		readonly keywords?: ReadonlyArray<string>;
+		readonly keywords?: readonly string[];
 		readonly license?: string;
-		readonly maintainers?: ReadonlyArray<Person>;
+		readonly maintainers?: readonly Person[];
 		readonly readme?: string;
 		readonly readmeFilename?: string;
 		readonly repository?: {readonly type: string; readonly url: string};
@@ -143,8 +143,8 @@ declare namespace packageJson {
 		readonly _npmUser: string;
 		readonly _npmVersion: string;
 		readonly main?: string;
-		readonly files?: ReadonlyArray<string>;
-		readonly man?: ReadonlyArray<string>;
+		readonly files?: readonly string[];
+		readonly man?: readonly string[];
 		readonly scripts?: {readonly [scriptName: string]: string};
 		readonly gitHead?: string;
 		readonly types?: string;
