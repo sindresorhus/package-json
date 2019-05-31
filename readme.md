@@ -27,7 +27,7 @@ const packageJson = require('package-json');
 
 ## API
 
-### packageJson(packageName, [options])
+### packageJson(packageName, options?)
 
 #### packageName
 
@@ -37,7 +37,7 @@ Name of the package.
 
 #### options
 
-Type: `Object`
+Type: `object`
 
 ##### version
 
@@ -76,7 +76,7 @@ The registry URL is by default inferred from the npm defaults and `.npmrc`. This
 
 ##### agent
 
-Type: `http.Agent | https.Agent | Object | false`
+Type: `http.Agent | https.Agent | object | false`
 
 Overwrite the `agent` option that is passed down to [`got`](https://github.com/sindresorhus/got#agent). This might be useful to add [proxy support](https://github.com/sindresorhus/got#proxies).
 
@@ -105,6 +105,14 @@ Both public and private registries are supported, for both scoped and unscoped p
 - [npm-email](https://github.com/sindresorhus/npm-email) - Get the email of an npm user
 
 
-## License
+---
 
-MIT © [Sindre Sorhus](https://sindresorhus.com)
+<div align="center">
+	<b>
+		<a href="https://tidelift.com/subscription/pkg/npm-package-json?utm_source=npm-package-json&utm_medium=referral&utm_campaign=readme">Get professional support for this package with a Tidelift subscription</a>
+	</b>
+	<br>
+	<sub>
+		Tidelift helps make open source sustainable for maintainers while giving companies<br>assurances about security, maintenance, and licensing for their dependencies.
+	</sub>
+</div>
