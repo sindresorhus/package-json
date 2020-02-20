@@ -31,6 +31,7 @@
 		"scoped"
 	],
 	"dependencies": {
+		"global-tunnel-ng": "^2.7.1",
 		"got": "^9.6.0",
 		"registry-auth-token": "^4.0.0",
 		"registry-url": "^5.0.0",

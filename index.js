@@ -6,6 +6,10 @@ const got = require('got');
 const registryUrl = require('registry-url');
 const registryAuthToken = require('registry-auth-token');
 const semver = require('semver');
+const globalTunnul = require('global-tunnel-ng');
+
+// Init global proxy
+globalTunnul.initialize();
 
 // These agent options are chosen to match the npm client defaults and help with performance
 // See: `npm config get maxsockets` and #50
