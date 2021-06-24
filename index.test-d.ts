@@ -1,5 +1,5 @@
 import {expectType} from 'tsd';
-import packageJson = require('.');
+import packageJson = require('./index.js');
 import {
 	FullMetadata,
 	FullVersion,
@@ -7,7 +7,7 @@ import {
 	AbbreviatedVersion,
 	PackageNotFoundError,
 	VersionNotFoundError
-} from '.';
+} from './index.js';
 
 expectType<Promise<AbbreviatedMetadata>>(packageJson('package-json'));
 expectType<Promise<AbbreviatedMetadata>>(
@@ -29,9 +29,9 @@ expectType<typeof PackageNotFoundError>(PackageNotFoundError);
 expectType<typeof VersionNotFoundError>(VersionNotFoundError);
 
 const packageNotFoundError = new PackageNotFoundError('foo');
-packageNotFoundError instanceof PackageNotFoundError;
+packageNotFoundError instanceof PackageNotFoundError; // eslint-disable-line @typescript-eslint/no-unused-expressions
 expectType<PackageNotFoundError>(packageNotFoundError);
 
 const versionNotFoundError = new VersionNotFoundError('foo', 'bar');
-versionNotFoundError instanceof VersionNotFoundError;
+versionNotFoundError instanceof VersionNotFoundError; // eslint-disable-line @typescript-eslint/no-unused-expressions
 expectType<VersionNotFoundError>(versionNotFoundError);

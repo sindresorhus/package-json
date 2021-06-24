@@ -1,8 +1,8 @@
 import {promisify} from 'util';
 import http from 'http';
 import test from 'ava';
-import privateRegistry from 'mock-private-registry/promise';
-import packageJson from '.';
+import privateRegistry from 'mock-private-registry/promise.js';
+import packageJson from './index.js';
 
 test('latest version', async t => {
 	const json = await packageJson('ava');
@@ -32,11 +32,11 @@ test('specific version', async t => {
 
 test('incomplete version x', async t => {
 	const json = await packageJson('pageres', {version: '0'});
-	t.is(json.version.substr(0, 2), '0.');
+	t.is(json.version.slice(0, 2), '0.');
 });
 
-test.failing('custom registry url', async t => {
-	const json = await packageJson('ava', {registryUrl: 'http://registry.node-modules.io/'});
+test('custom registry url', async t => {
+	const json = await packageJson('ava', {registryUrl: 'https://npm.open-registry.dev/'});
 	t.is(json.name, 'ava');
 	t.falsy(json.versions);
 });

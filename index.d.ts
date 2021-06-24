@@ -1,4 +1,3 @@
-/// <reference types="node"/>
 import {Agent as HttpAgent} from 'http';
 import {Agent as HttpsAgent} from 'https';
 
@@ -69,19 +68,20 @@ declare namespace packageJson {
 	}
 
 	interface DistTags {
-		readonly latest: string;
 		readonly [tagName: string]: string;
+		readonly latest: string;
 	}
 
 	interface AbbreviatedMetadata {
+		readonly [key: string]: unknown;
 		readonly 'dist-tags': DistTags;
 		readonly modified: string;
 		readonly name: string;
-		readonly versions: {readonly [version: string]: AbbreviatedVersion};
-		readonly [key: string]: unknown;
+		readonly versions: Readonly<Record<string, AbbreviatedVersion>>;
 	}
 
 	interface AbbreviatedVersion {
+		readonly [key: string]: unknown;
 		readonly name: string;
 		readonly version: string;
 		readonly dist: {
@@ -90,16 +90,15 @@ declare namespace packageJson {
 			readonly integrity?: string;
 		};
 		readonly deprecated?: string;
-		readonly dependencies?: {readonly [name: string]: string};
-		readonly optionalDependencies?: {readonly [name: string]: string};
-		readonly devDependencies?: {readonly [name: string]: string};
-		readonly bundleDependencies?: {readonly [name: string]: string};
-		readonly peerDependencies?: {readonly [name: string]: string};
-		readonly bin?: {readonly [key: string]: string};
+		readonly dependencies?: Readonly<Record<string, string>>;
+		readonly optionalDependencies?: Readonly<Record<string, string>>;
+		readonly devDependencies?: Readonly<Record<string, string>>;
+		readonly bundleDependencies?: Readonly<Record<string, string>>;
+		readonly peerDependencies?: Readonly<Record<string, string>>;
+		readonly bin?: Readonly<Record<string, string>>;
 		readonly directories?: readonly string[];
-		readonly engines?: {readonly [type: string]: string};
+		readonly engines?: Readonly<Record<string, string>>;
 		readonly _hasShrinkwrap?: boolean;
-		readonly [key: string]: unknown;
 	}
 
 	interface Person {
@@ -111,8 +110,8 @@ declare namespace packageJson {
 	interface HoistedData {
 		readonly author?: Person;
 		readonly bugs?:
-			| {readonly url: string; readonly email?: string}
-			| {readonly url?: string; readonly email: string};
+		| {readonly url: string; readonly email?: string}
+		| {readonly url?: string; readonly email: string};
 		readonly contributors?: readonly Person[];
 		readonly description?: string;
 		readonly homepage?: string;
@@ -125,19 +124,20 @@ declare namespace packageJson {
 	}
 
 	interface FullMetadata extends AbbreviatedMetadata, HoistedData {
+		readonly [key: string]: unknown;
 		readonly _id: string;
 		readonly _rev: string;
 		readonly time: {
+			readonly [version: string]: string;
 			readonly created: string;
 			readonly modified: string;
-			readonly [version: string]: string;
 		};
-		readonly users?: {readonly [user: string]: boolean};
-		readonly versions: {readonly [version: string]: FullVersion};
-		readonly [key: string]: unknown;
+		readonly users?: Readonly<Record<string, boolean>>;
+		readonly versions: Readonly<Record<string, FullVersion>>;
 	}
 
 	interface FullVersion extends AbbreviatedVersion, HoistedData {
+		readonly [key: string]: unknown;
 		readonly _id: string;
 		readonly _nodeVersion: string;
 		readonly _npmUser: string;
@@ -145,18 +145,17 @@ declare namespace packageJson {
 		readonly main?: string;
 		readonly files?: readonly string[];
 		readonly man?: readonly string[];
-		readonly scripts?: {readonly [scriptName: string]: string};
+		readonly scripts?: Readonly<Record<string, string>>;
 		readonly gitHead?: string;
 		readonly types?: string;
 		readonly typings?: string;
-		readonly [key: string]: unknown;
 	}
 
 	type VersionNotFoundError = VersionNotFoundErrorClass;
 	type PackageNotFoundError = PackageNotFoundErrorClass;
 }
 
-declare const packageJson: {
+declare const packageJson: { // eslint-disable-line no-redeclare
 	/**
 	Get metadata of a package from the npm registry.
 
@@ -166,21 +165,15 @@ declare const packageJson: {
 	```
 	import packageJson = require('package-json');
 
-	(async () => {
-		console.log(await packageJson('ava'));
-		//=> {name: 'ava', ...}
+	console.log(await packageJson('ava'));
+	//=> {name: 'ava', ...}
 
-		// Also works with scoped packages
-		console.log(await packageJson('@sindresorhus/df'));
-	})();
+	// Also works with scoped packages
+	console.log(await packageJson('@sindresorhus/df'));
 	```
 	*/
-	(packageName: string, options: packageJson.FullMetadataOptions): Promise<
-		packageJson.FullMetadata
-	>;
-	(packageName: string, options?: packageJson.Options): Promise<
-		packageJson.AbbreviatedMetadata
-	>;
+	(packageName: string, options: packageJson.FullMetadataOptions): Promise<packageJson.FullMetadata>;
+	(packageName: string, options?: packageJson.Options): Promise<packageJson.AbbreviatedMetadata>;
 
 	/**
 	The error thrown when the given package version cannot be found.

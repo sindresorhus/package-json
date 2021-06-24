@@ -1,5 +1,4 @@
 'use strict';
-const {URL} = require('url');
 const {Agent: HttpAgent} = require('http');
 const {Agent: HttpsAgent} = require('https');
 const got = require('got');
@@ -54,7 +53,6 @@ const packageJson = async (packageName, options) => {
 	}
 
 	const gotOptions = {
-		json: true,
 		headers,
 		agent: {
 			http: httpAgent,
@@ -66,18 +64,16 @@ const packageJson = async (packageName, options) => {
 		gotOptions.agent = options.agent;
 	}
 
-	let response;
+	let data;
 	try {
-		response = await got(packageUrl, gotOptions);
+		data = await got(packageUrl, gotOptions).json();
 	} catch (error) {
-		if (error.statusCode === 404) {
+		if (error.response.statusCode === 404) {
 			throw new PackageNotFoundError(packageName);
 		}
 
 		throw error;
 	}
-
-	let data = response.body;
 
 	if (options.allVersions) {
 		return data;

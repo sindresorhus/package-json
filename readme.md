@@ -2,13 +2,11 @@
 
 > Get metadata of a package from the npm registry
 
-
 ## Install
 
 ```
 $ npm install package-json
 ```
-
 
 ## Usage
 
@@ -23,7 +21,6 @@ const packageJson = require('package-json');
 	console.log(await packageJson('@sindresorhus/df'));
 })();
 ```
-
 
 ## API
 
@@ -41,7 +38,7 @@ Type: `object`
 
 ##### version
 
-Type: `string`<br>
+Type: `string`\
 Default: `latest`
 
 Package version such as `1.0.0` or a [dist tag](https://docs.npmjs.com/cli/dist-tag) such as `latest`.
@@ -55,21 +52,21 @@ The version can also be in any format supported by the [semver](https://github.c
 
 ##### fullMetadata
 
-Type: `boolean`<br>
+Type: `boolean`\
 Default: `false`
 
 By default, only an abbreviated metadata object is returned for performance reasons. [Read more.](https://github.com/npm/registry/blob/master/docs/responses/package-metadata.md)
 
 ##### allVersions
 
-Type: `boolean`<br>
+Type: `boolean`\
 Default: `false`
 
 Return the [main entry](https://registry.npmjs.org/ava) containing all versions.
 
 ##### registryUrl
 
-Type: `string`<br>
+Type: `string`\
 Default: Auto-detected
 
 The registry URL is by default inferred from the npm defaults and `.npmrc`. This is beneficial as `package-json` and any project using it will work just like npm. This option is **only** intended for internal tools. You should **not** use this option in reusable packages. Prefer just using `.npmrc` whenever possible.
@@ -80,7 +77,6 @@ Type: `http.Agent | https.Agent | object | false`
 
 Overwrite the `agent` option that is passed down to [`got`](https://github.com/sindresorhus/got#agent). This might be useful to add [proxy support](https://github.com/sindresorhus/got#proxies).
 
-
 ### packageJson.PackageNotFoundError
 
 The error thrown when the given package name cannot be found.
@@ -89,18 +85,15 @@ The error thrown when the given package name cannot be found.
 
 The error thrown when the given package version cannot be found.
 
-
 ## Authentication
 
 Both public and private registries are supported, for both scoped and unscoped packages, as long as the registry uses either bearer tokens or basic authentication.
-
 
 ## package-json for enterprise
 
 Available as part of the Tidelift Subscription.
 
 The maintainers of package-json and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. [Learn more.](https://tidelift.com/subscription/pkg/npm-package-json?utm_source=npm-package-json&utm_medium=referral&utm_campaign=enterprise&utm_term=repo)
-
 
 ## Related
 
