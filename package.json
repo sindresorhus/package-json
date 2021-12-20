@@ -32,7 +32,7 @@
 		"scoped"
 	],
 	"dependencies": {
-		"got": "^11.8.2",
+		"got": "^12.0.0",
 		"registry-auth-token": "^4.0.0",
 		"registry-url": "^5.0.0",
 		"semver": "^7.3.5"
