@@ -1,38 +1,38 @@
-'use strict';
-const {Agent: HttpAgent} = require('http');
-const {Agent: HttpsAgent} = require('https');
-const got = require('got');
-const registryUrl = require('registry-url');
-const registryAuthToken = require('registry-auth-token');
-const semver = require('semver');
+import {Agent as HttpAgent} from 'node:http';
+import {Agent as HttpsAgent} from 'node:https';
+import got from 'got';
+import registryUrl from 'registry-url';
+import registryAuthToken from 'registry-auth-token';
+import semver from 'semver';
 
 // These agent options are chosen to match the npm client defaults and help with performance
 // See: `npm config get maxsockets` and #50
 const agentOptions = {
 	keepAlive: true,
-	maxSockets: 50
+	maxSockets: 50,
 };
+
 const httpAgent = new HttpAgent(agentOptions);
 const httpsAgent = new HttpsAgent(agentOptions);
 
-class PackageNotFoundError extends Error {
+export class PackageNotFoundError extends Error {
 	constructor(packageName) {
 		super(`Package \`${packageName}\` could not be found`);
 		this.name = 'PackageNotFoundError';
 	}
 }
 
-class VersionNotFoundError extends Error {
+export class VersionNotFoundError extends Error {
 	constructor(packageName, version) {
 		super(`Version \`${version}\` for package \`${packageName}\` could not be found`);
 		this.name = 'VersionNotFoundError';
 	}
 }
 
-const packageJson = async (packageName, options) => {
+export default async function packageJson(packageName, options) {
 	options = {
 		version: 'latest',
-		...options
+		...options,
 	};
 
 	const scope = packageName.split('/')[0];
@@ -41,7 +41,7 @@ const packageJson = async (packageName, options) => {
 	const authInfo = registryAuthToken(registryUrl_.toString(), {recursive: true});
 
 	const headers = {
-		accept: 'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*'
+		accept: 'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*',
 	};
 
 	if (options.fullMetadata) {
@@ -56,8 +56,8 @@ const packageJson = async (packageName, options) => {
 		headers,
 		agent: {
 			http: httpAgent,
-			https: httpsAgent
-		}
+			https: httpsAgent,
+		},
 	};
 
 	if (options.agent) {
@@ -102,10 +102,4 @@ const packageJson = async (packageName, options) => {
 	}
 
 	return data;
-};
-
-module.exports = packageJson;
-// TODO: remove this in the next major version
-module.exports.default = packageJson;
-module.exports.PackageNotFoundError = PackageNotFoundError;
-module.exports.VersionNotFoundError = VersionNotFoundError;
+}

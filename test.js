@@ -1,8 +1,8 @@
-import {promisify} from 'util';
-import http from 'http';
+import {promisify} from 'node:util';
+import http from 'node:http';
 import test from 'ava';
 import privateRegistry from 'mock-private-registry/promise.js';
-import packageJson from './index.js';
+import packageJson, {PackageNotFoundError, VersionNotFoundError} from './index.js';
 
 test('latest version', async t => {
 	const json = await packageJson('ava');
@@ -13,7 +13,7 @@ test('latest version', async t => {
 test('full metadata', async t => {
 	const json = await packageJson('pageres', {
 		fullMetadata: true,
-		version: '4.4.0'
+		version: '4.4.0',
 	});
 	t.is(json.name, 'pageres');
 	t.is(json._id, 'pageres@4.4.0');
@@ -49,7 +49,7 @@ test('scoped - latest version', async t => {
 test('scoped - full metadata', async t => {
 	const json = await packageJson('@sindresorhus/df', {
 		fullMetadata: true,
-		version: '1.0.1'
+		version: '1.0.1',
 	});
 	t.is(json.name, '@sindresorhus/df');
 	t.is(json._id, '@sindresorhus/df@1.0.1');
@@ -72,11 +72,11 @@ test('scoped - dist tag', async t => {
 });
 
 test('reject when package doesn\'t exist', async t => {
-	await t.throwsAsync(packageJson('nnnope'), {instanceOf: packageJson.PackageNotFoundError});
+	await t.throwsAsync(packageJson('nnnope'), {instanceOf: PackageNotFoundError});
 });
 
 test('reject when version doesn\'t exist', async t => {
-	await t.throwsAsync(packageJson('hapi', {version: '6.6.6'}), {instanceOf: packageJson.VersionNotFoundError});
+	await t.throwsAsync(packageJson('hapi', {version: '6.6.6'}), {instanceOf: VersionNotFoundError});
 });
 
 test('does not send any auth token for unconfigured registries', async t => {
@@ -84,7 +84,7 @@ test('does not send any auth token for unconfigured registries', async t => {
 		response.end(JSON.stringify({headers: request.headers, 'dist-tags': {}}));
 	});
 
-	await promisify(server.listen.bind(server))(63144, '127.0.0.1');
+	await promisify(server.listen.bind(server))(63_144, '127.0.0.1');
 	const json = await packageJson('@mockscope3/foobar', {allVersions: true});
 	t.is(json.headers.host, 'localhost:63144');
 	t.is(json.headers.authorization, undefined);
@@ -100,10 +100,10 @@ test('private registry (bearer token)', async t => {
 
 test('private registry (basic token)', async t => {
 	const server = await privateRegistry({
-		port: 63143,
+		port: 63_143,
 		pkgName: '@mockscope2/foobar',
 		token: 'QWxhZGRpbjpPcGVuU2VzYW1l',
-		tokenType: 'Basic'
+		tokenType: 'Basic',
 	});
 	const json = await packageJson('@mockscope2/foobar');
 	t.is(json.name, '@mockscope2/foobar');

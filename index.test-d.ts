@@ -1,23 +1,22 @@
 import {expectType} from 'tsd';
-import packageJson = require('./index.js');
-import {
+import packageJson, {
 	FullMetadata,
 	FullVersion,
 	AbbreviatedMetadata,
 	AbbreviatedVersion,
 	PackageNotFoundError,
-	VersionNotFoundError
+	VersionNotFoundError,
 } from './index.js';
 
 expectType<Promise<AbbreviatedMetadata>>(packageJson('package-json'));
 expectType<Promise<AbbreviatedMetadata>>(
-	packageJson('package-json', {version: '1.2.3'})
+	packageJson('package-json', {version: '1.2.3'}),
 );
 expectType<Promise<AbbreviatedMetadata>>(
-	packageJson('package-json', {allVersions: true})
+	packageJson('package-json', {allVersions: true}),
 );
 expectType<Promise<FullMetadata>>(
-	packageJson('package-json', {fullMetadata: true})
+	packageJson('package-json', {fullMetadata: true}),
 );
 
 const abbreviatedMetadata = await packageJson('package-json');

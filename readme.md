@@ -4,22 +4,20 @@
 
 ## Install
 
-```
-$ npm install package-json
+```sh
+npm install package-json
 ```
 
 ## Usage
 
 ```js
-const packageJson = require('package-json');
+import packageJson from 'package-json';
 
-(async () => {
-	console.log(await packageJson('ava'));
-	//=> {name: 'ava', ...}
+console.log(await packageJson('ava'));
+//=> {name: 'ava', …}
 
-	// Also works with scoped packages
-	console.log(await packageJson('@sindresorhus/df'));
-})();
+// Also works with scoped packages
+console.log(await packageJson('@sindresorhus/df'));
 ```
 
 ## API
@@ -73,15 +71,15 @@ The registry URL is by default inferred from the npm defaults and `.npmrc`. This
 
 ##### agent
 
-Type: `http.Agent | https.Agent | object | false`
+Type: `object`
 
 Overwrite the `agent` option that is passed down to [`got`](https://github.com/sindresorhus/got#agent). This might be useful to add [proxy support](https://github.com/sindresorhus/got#proxies).
 
-### packageJson.PackageNotFoundError
+### PackageNotFoundError
 
 The error thrown when the given package name cannot be found.
 
-### packageJson.VersionNotFoundError
+### VersionNotFoundError
 
 The error thrown when the given package version cannot be found.
 
