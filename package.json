@@ -36,7 +36,7 @@
 	],
 	"dependencies": {
 		"got": "^12.1.0",
-		"registry-auth-token": "^4.2.1",
+		"registry-auth-token": "^5.0.1",
 		"registry-url": "^6.0.0",
 		"semver": "^7.3.7"
 	},
