@@ -87,12 +87,6 @@ The error thrown when the given package version cannot be found.
 
 Both public and private registries are supported, for both scoped and unscoped packages, as long as the registry uses either bearer tokens or basic authentication.
 
-## package-json for enterprise
-
-Available as part of the Tidelift Subscription.
-
-The maintainers of package-json and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. [Learn more.](https://tidelift.com/subscription/pkg/npm-package-json?utm_source=npm-package-json&utm_medium=referral&utm_campaign=enterprise&utm_term=repo)
-
 ## Related
 
 - [package-json-cli](https://github.com/sindresorhus/package-json-cli) - CLI for this module

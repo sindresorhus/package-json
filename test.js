@@ -37,11 +37,12 @@ test('incomplete version x', async t => {
 	t.is(json.version.slice(0, 2), '0.');
 });
 
-test('custom registry url', async t => {
-	const json = await packageJson('ava', {registryUrl: 'https://npm.open-registry.dev/'});
-	t.is(json.name, 'ava');
-	t.falsy(json.versions);
-});
+// TODO: Find an alternative npm instance.
+// test.failing('custom registry url', async t => {
+// 	const json = await packageJson('ava', {registryUrl: 'https://npm.open-registry.dev/'});
+// 	t.is(json.name, 'ava');
+// 	t.falsy(json.versions);
+// });
 
 test('scoped - latest version', async t => {
 	const json = await packageJson('@sindresorhus/df');
