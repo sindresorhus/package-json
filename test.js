@@ -17,6 +17,8 @@ test('full metadata', async t => {
 	});
 	t.is(json.name, 'pageres');
 	t.is(json._id, 'pageres@4.4.0');
+	t.is(json.time.created, '2014-02-07T18:17:46.737Z');
+	t.is(json.time.modified, '2022-10-27T08:57:30.321Z');
 });
 
 test('all version', async t => {
@@ -53,6 +55,8 @@ test('scoped - full metadata', async t => {
 	});
 	t.is(json.name, '@sindresorhus/df');
 	t.is(json._id, '@sindresorhus/df@1.0.1');
+	t.is(json.time.created, '2015-05-04T18:10:02.416Z');
+	t.is(json.time.modified, '2022-06-12T23:49:38.166Z');
 });
 
 test('scoped - all version', async t => {
