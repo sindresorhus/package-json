@@ -1,5 +1,3 @@
-import {Agent as HttpAgent} from 'node:http';
-import {Agent as HttpsAgent} from 'node:https';
 import axios from "axios";
 import registryUrl from 'registry-url';
 import semver from 'semver';
@@ -56,6 +54,9 @@ export default async function packageJson(packageName, options) {
 		if (authInfo) {
 			headers.authorization = `${authInfo.type} ${authInfo.token}`;
 		}
+
+		const {Agent: HttpAgent} = await import('node:http');
+		const {Agent: HttpsAgent} = await import('node:https');
 
 		agents.httpAgent = options.agent?.httpAgent ?? new HttpAgent(agentOptions);
 		agents.httpsAgent = options.agent?.httpsAgent ??  new HttpsAgent(agentOptions);
