@@ -11,10 +11,7 @@ const agentOptions = {
 	maxSockets: 50,
 };
 
-const axiosInstance = axios.create({
-	httpAgent: new HttpAgent(agentOptions),
-	httpsAgent: new HttpsAgent(agentOptions),
-})
+const axiosInstance = axios.create();
 
 const httpAgent = new HttpAgent(agentOptions);
 const httpsAgent = new HttpsAgent(agentOptions);
@@ -47,6 +44,8 @@ export default async function packageJson(packageName, options) {
 		accept: 'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*',
 	};
 
+	const agents = {};
+
 	if (options.fullMetadata) {
 		delete headers.accept;
 	}
@@ -57,15 +56,15 @@ export default async function packageJson(packageName, options) {
 		if (authInfo) {
 			headers.authorization = `${authInfo.type} ${authInfo.token}`;
 		}
+
+		agents.httpAgent = options.agent?.httpAgent ?? new HttpAgent(agentOptions);
+		agents.httpsAgent = options.agent?.httpsAgent ??  new HttpsAgent(agentOptions);
 	}
 
 	const requestOptions = {
 		headers,
+		...agents,
 	};
-
-	if (options.agent) {
-		Object.assign(requestOptions, options.agent)
-	}
 
 	let data;
 	try {
