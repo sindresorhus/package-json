@@ -9,11 +9,6 @@ const agentOptions = {
 	maxSockets: 50,
 };
 
-const axiosInstance = axios.create();
-
-const httpAgent = new HttpAgent(agentOptions);
-const httpsAgent = new HttpsAgent(agentOptions);
-
 export class PackageNotFoundError extends Error {
 	constructor(packageName) {
 		super(`Package \`${packageName}\` could not be found`);
