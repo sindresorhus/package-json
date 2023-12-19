@@ -43,7 +43,6 @@ export default async function packageJson(packageName, options) {
 	const scope = packageName.split('/')[0];
 	const registryUrl_ = options.registryUrl || registryUrl(scope);
 	const packageUrl = new URL(encodeURIComponent(packageName).replace(/^%40/, '@'), registryUrl_);
-	const authInfo = registryAuthToken(registryUrl_.toString(), {recursive: true});
 
 	const headers = {
 		accept: 'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*',
@@ -53,9 +52,12 @@ export default async function packageJson(packageName, options) {
 		delete headers.accept;
 	}
 
-	if (authInfo) {
-		headers.authorization = `${authInfo.type} ${authInfo.token}`;
-	}
+	try {
+		const authInfo = registryAuthToken(registryUrl_.toString(), {recursive: true});
+		if (authInfo) {
+			headers.authorization = `${authInfo.type} ${authInfo.token}`;
+		}
+	} catch (e) {}
 
 	const requestOptions = {
 		headers,
