@@ -2,7 +2,6 @@ import {Agent as HttpAgent} from 'node:http';
 import {Agent as HttpsAgent} from 'node:https';
 import axios from "axios";
 import registryUrl from 'registry-url';
-import registryAuthToken from 'registry-auth-token';
 import semver from 'semver';
 
 // These agent options are chosen to match the npm client defaults and help with performance
@@ -52,12 +51,13 @@ export default async function packageJson(packageName, options) {
 		delete headers.accept;
 	}
 
-	try {
+	if (typeof process === 'object' && typeof window === 'undefined') {
+		const registryAuthToken = await import('registry-auth-token');
 		const authInfo = registryAuthToken(registryUrl_.toString(), {recursive: true});
 		if (authInfo) {
 			headers.authorization = `${authInfo.type} ${authInfo.token}`;
 		}
-	} catch (e) {}
+	}
 
 	const requestOptions = {
 		headers,
