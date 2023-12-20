@@ -44,7 +44,7 @@ export default async function packageJson(packageName, options) {
 	}
 
 	if (typeof process === 'object' && typeof window === 'undefined') {
-		const registryAuthToken = await import('registry-auth-token');
+		const { default: registryAuthToken } = await import('registry-auth-token');
 		const authInfo = registryAuthToken(registryUrl_.toString(), {recursive: true});
 		if (authInfo) {
 			headers.authorization = `${authInfo.type} ${authInfo.token}`;
