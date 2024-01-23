@@ -1,9 +1,9 @@
 import {expectType} from 'tsd';
 import packageJson, {
-	FullMetadata,
-	FullVersion,
-	AbbreviatedMetadata,
-	AbbreviatedVersion,
+	type FullMetadata,
+	type FullVersion,
+	type AbbreviatedMetadata,
+	type AbbreviatedVersion,
 	PackageNotFoundError,
 	VersionNotFoundError,
 } from './index.js';

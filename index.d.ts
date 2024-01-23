@@ -1,6 +1,6 @@
 import {Agent as HttpAgent} from 'node:http';
 import {Agent as HttpsAgent} from 'node:https';
-import {Agents} from 'got';
+import {type Agents} from 'got';
 
 /**
 The error thrown when the given package version cannot be found.
@@ -68,12 +68,12 @@ export type FullMetadataOptions = {
 	readonly fullMetadata: true;
 } & Options;
 
-interface DistTags {
+type DistTags = {
 	readonly [tagName: string]: string;
 	readonly latest: string;
-}
+};
 
-interface AbbreviatedVersion {
+type AbbreviatedVersion = {
 	readonly [key: string]: unknown;
 	readonly name: string;
 	readonly version: string;
@@ -92,15 +92,15 @@ interface AbbreviatedVersion {
 	readonly directories?: readonly string[];
 	readonly engines?: Readonly<Record<string, string>>;
 	readonly _hasShrinkwrap?: boolean;
-}
+};
 
-interface Person {
+type Person = {
 	readonly name?: string;
 	readonly email?: string;
 	readonly url?: string;
-}
+};
 
-interface HoistedData {
+type HoistedData = {
 	readonly author?: Person;
 	readonly bugs?:
 	| {readonly url: string; readonly email?: string}
@@ -114,9 +114,9 @@ interface HoistedData {
 	readonly readme?: string;
 	readonly readmeFilename?: string;
 	readonly repository?: {readonly type: string; readonly url: string};
-}
+};
 
-interface FullVersion extends AbbreviatedVersion, HoistedData {
+type FullVersion = {
 	readonly [key: string]: unknown;
 	readonly _id: string;
 	readonly _nodeVersion: string;
@@ -129,9 +129,9 @@ interface FullVersion extends AbbreviatedVersion, HoistedData {
 	readonly gitHead?: string;
 	readonly types?: string;
 	readonly typings?: string;
-}
+} & AbbreviatedVersion & HoistedData;
 
-export interface FullMetadata extends AbbreviatedMetadata, HoistedData {
+export type FullMetadata = {
 	readonly [key: string]: unknown;
 	readonly _id: string;
 	readonly _rev: string;
@@ -142,15 +142,15 @@ export interface FullMetadata extends AbbreviatedMetadata, HoistedData {
 	};
 	readonly users?: Readonly<Record<string, boolean>>;
 	readonly versions: Readonly<Record<string, FullVersion>>;
-}
+} & AbbreviatedMetadata & HoistedData;
 
-export interface AbbreviatedMetadata {
+export type AbbreviatedMetadata = {
 	readonly [key: string]: unknown;
 	readonly 'dist-tags': DistTags;
 	readonly modified: string;
 	readonly name: string;
 	readonly versions: Readonly<Record<string, AbbreviatedVersion>>;
-}
+};
 
 /**
 Get metadata of a package from the npm registry.

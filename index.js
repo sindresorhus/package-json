@@ -83,7 +83,7 @@ export default async function packageJson(packageName, options) {
 	const versionError = new VersionNotFoundError(packageName, version);
 
 	if (data['dist-tags'][version]) {
-		const time = data.time;
+		const {time} = data;
 		data = data.versions[data['dist-tags'][version]];
 		data.time = time;
 	} else if (version) {
@@ -96,7 +96,7 @@ export default async function packageJson(packageName, options) {
 			}
 		}
 
-		const time = data.time;
+		const {time} = data;
 		data = data.versions[version];
 		data.time = time;
 
