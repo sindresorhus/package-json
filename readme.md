@@ -83,7 +83,7 @@ Both public and private registries are supported, for both scoped and unscoped p
 
 ## Proxies
 
-Proxy support is not implemented in this package. If necessary, use a global agent that modifies `fetch`.
+Proxy support is not implemented in this package. If necessary, use a global agent that modifies [`fetch`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), which this package uses internally.
 
 Support for this may come to [Node.js in the future](https://github.com/nodejs/undici/issues/1650).
 
