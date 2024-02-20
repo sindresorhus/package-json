@@ -1,7 +1,3 @@
-import {Agent as HttpAgent} from 'node:http';
-import {Agent as HttpsAgent} from 'node:https';
-import {type Agents} from 'got';
-
 /**
 The error thrown when the given package version cannot be found.
 */
@@ -52,11 +48,6 @@ export type Options = {
 	The registry URL is by default inferred from the npm defaults and `.npmrc`. This is beneficial as `package-json` and any project using it will work just like npm. This option is*only** intended for internal tools. You should __not__ use this option in reusable packages. Prefer just using `.npmrc` whenever possible.
 	*/
 	readonly registryUrl?: string;
-
-	/**
-	Overwrite the `agent` option that is passed down to [`got`](https://github.com/sindresorhus/got#agent). This might be useful to add [proxy support](https://github.com/sindresorhus/got#proxies).
-	*/
-	readonly agent?: Agents;
 };
 
 export type FullMetadataOptions = {

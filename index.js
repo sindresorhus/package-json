@@ -1,6 +1,6 @@
 import {Agent as HttpAgent} from 'node:http';
 import {Agent as HttpsAgent} from 'node:https';
-import got from 'got';
+import ky from 'ky';
 import registryUrl from 'registry-url';
 import registryAuthToken from 'registry-auth-token';
 import semver from 'semver';
@@ -52,23 +52,17 @@ export default async function packageJson(packageName, options) {
 		headers.authorization = `${authInfo.type} ${authInfo.token}`;
 	}
 
-	const gotOptions = {
-		headers,
-		agent: {
-			http: httpAgent,
-			https: httpsAgent,
-		},
-	};
-
-	if (options.agent) {
-		gotOptions.agent = options.agent;
-	}
-
 	let data;
 	try {
-		data = await got(packageUrl, gotOptions).json();
+		data = await ky(packageUrl, {
+			headers,
+			agent: options.agent ?? {
+				http: httpAgent,
+				https: httpsAgent,
+			},
+		}).json();
 	} catch (error) {
-		if (error?.response?.statusCode === 404) {
+		if (error?.response?.status === 404) {
 			throw new PackageNotFoundError(packageName);
 		}
 
