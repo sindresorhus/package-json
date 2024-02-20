@@ -75,6 +75,13 @@ Type: `object`
 
 Overwrite the `agent` option that is passed down to [`got`](https://github.com/sindresorhus/got#agent). This might be useful to add [proxy support](https://github.com/sindresorhus/got#proxies).
 
+##### ignoreDeprecated
+
+Type: `boolean`\
+Default: `true`
+
+Whether or not to omit deprecated versions of a package. Has no effect if a dist tag or a specific version is provided.
+
 ### PackageNotFoundError
 
 The error thrown when the given package name cannot be found.
