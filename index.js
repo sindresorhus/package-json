@@ -74,7 +74,6 @@ export default async function packageJson(packageName, options) {
 			}
 		}
 
-		// TODO: is this still valid here, or does it need to be recalculated?
 		if (!versionExists) {
 			const versions = Object.keys(data.versions);
 			version = semver.maxSatisfying(versions, version);
