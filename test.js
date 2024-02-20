@@ -124,9 +124,7 @@ test('does not send any auth token for unconfigured registries', async t => {
 	});
 
 	await promisify(server.listen.bind(server))(63_144, '127.0.0.1');
-	console.log('listening!');
 	const json = await packageJson('@mockscope3/foobar', {allVersions: true});
-	console.log('fetchd!');
 
 	t.like(json.headers, {
 		host: 'localhost:63144',
