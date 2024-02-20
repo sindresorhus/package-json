@@ -50,7 +50,9 @@ export type Options = {
 	readonly registryUrl?: string;
 
 	/**
-	Whether or not to omit deprecated versions of a package. Has no effect if a dist tag or a specific version is provided.
+	Whether or not to omit deprecated versions of a package.
+
+	If set, versions marked as deprecated on the registry are omitted from results. Providing a dist tag or a specific version will still return that version, even if it's deprecated. If no version can be found once deprecated versions are omitted, a `VersionNotFoundError` is thrown.
 
 	@default true
 	*/
