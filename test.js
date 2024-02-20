@@ -1,13 +1,16 @@
 import {promisify} from 'node:util';
 import http from 'node:http';
 import test from 'ava';
-import privateRegistry from 'mock-private-registry/promise.js';
+import privateRegistry from 'private-registry-mock';
 import packageJson, {PackageNotFoundError, VersionNotFoundError} from './index.js';
 
 test('latest version', async t => {
 	const json = await packageJson('ava');
-	t.is(json.name, 'ava');
-	t.falsy(json.versions);
+
+	t.like(json, {
+		name: 'ava',
+		versions: undefined,
+	});
 });
 
 test('full metadata', async t => {
@@ -15,20 +18,33 @@ test('full metadata', async t => {
 		fullMetadata: true,
 		version: '4.4.0',
 	});
-	t.is(json.name, 'pageres');
-	t.is(json._id, 'pageres@4.4.0');
-	t.is(json.time.created, '2014-02-07T18:17:46.737Z');
+
+	t.like(json, {
+		name: 'pageres',
+		_id: 'pageres@4.4.0',
+		time: {
+			created: '2014-02-07T18:17:46.737Z',
+		},
+	});
 });
 
 test('all version', async t => {
 	const json = await packageJson('pageres', {allVersions: true});
-	t.is(json.name, 'pageres');
-	t.is(json.versions['0.1.0'].name, 'pageres');
+
+	t.like(json, {
+		name: 'pageres',
+		versions: {
+			'0.1.0': {name: 'pageres'},
+		},
+	});
 });
 
 test('specific version', async t => {
 	const json = await packageJson('pageres', {version: '0.1.0'});
-	t.is(json.version, '0.1.0');
+
+	t.like(json, {
+		version: '0.1.0',
+	});
 });
 
 test('incomplete version x', async t => {
@@ -45,7 +61,10 @@ test('incomplete version x', async t => {
 
 test('scoped - latest version', async t => {
 	const json = await packageJson('@sindresorhus/df');
-	t.is(json.name, '@sindresorhus/df');
+
+	t.like(json, {
+		name: '@sindresorhus/df',
+	});
 });
 
 test('scoped - full metadata', async t => {
@@ -53,26 +72,42 @@ test('scoped - full metadata', async t => {
 		fullMetadata: true,
 		version: '1.0.1',
 	});
-	t.is(json.name, '@sindresorhus/df');
-	t.is(json._id, '@sindresorhus/df@1.0.1');
-	t.is(json.time.created, '2015-05-04T18:10:02.416Z');
-	t.is(json.time.modified, '2022-06-12T23:49:38.166Z');
+
+	t.like(json, {
+		name: '@sindresorhus/df',
+		_id: '@sindresorhus/df@1.0.1',
+		time: {
+			created: '2015-05-04T18:10:02.416Z',
+			modified: '2022-06-12T23:49:38.166Z',
+		},
+	});
 });
 
 test('scoped - all version', async t => {
 	const json = await packageJson('@sindresorhus/df', {allVersions: true});
-	t.is(json.name, '@sindresorhus/df');
-	t.is(json.versions['1.0.1'].name, '@sindresorhus/df');
+
+	t.like(json, {
+		name: '@sindresorhus/df',
+		versions: {
+			'1.0.1': {name: '@sindresorhus/df'},
+		},
+	});
 });
 
 test('scoped - specific version', async t => {
 	const json = await packageJson('@sindresorhus/df', {version: '1.0.1'});
-	t.is(json.version, '1.0.1');
+
+	t.like(json, {
+		version: '1.0.1',
+	});
 });
 
 test('scoped - dist tag', async t => {
 	const json = await packageJson('@rexxars/npmtest', {version: 'next'});
-	t.is(json.version, '2.0.0');
+
+	t.like(json, {
+		version: '2.0.0',
+	});
 });
 
 test('reject when package doesn\'t exist', async t => {
@@ -90,26 +125,42 @@ test('does not send any auth token for unconfigured registries', async t => {
 
 	await promisify(server.listen.bind(server))(63_144, '127.0.0.1');
 	const json = await packageJson('@mockscope3/foobar', {allVersions: true});
-	t.is(json.headers.host, 'localhost:63144');
-	t.is(json.headers.authorization, undefined);
+
+	t.like(json.headers, {
+		host: 'localhost:63144',
+		authorization: undefined,
+	});
+
 	await promisify(server.close.bind(server))();
 });
 
 test('private registry (bearer token)', async t => {
-	const server = await privateRegistry();
+	const server = await privateRegistry({port: 63_142});
 	const json = await packageJson('@mockscope/foobar');
-	t.is(json.name, '@mockscope/foobar');
+
+	t.like(json, {
+		name: '@mockscope/foobar',
+	});
+
 	server.close();
 });
 
 test('private registry (basic token)', async t => {
 	const server = await privateRegistry({
 		port: 63_143,
-		pkgName: '@mockscope2/foobar',
-		token: 'QWxhZGRpbjpPcGVuU2VzYW1l',
-		tokenType: 'Basic',
+		package: {
+			name: '@mockscope2/foobar',
+		},
+		token: {
+			type: 'basic',
+			value: 'QWxhZGRpbjpPcGVuU2VzYW1l', // Aladdin:OpenSesame
+		},
 	});
 	const json = await packageJson('@mockscope2/foobar');
-	t.is(json.name, '@mockscope2/foobar');
+
+	t.like(json, {
+		name: '@mockscope2/foobar',
+	});
+
 	server.close();
 });
