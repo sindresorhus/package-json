@@ -69,12 +69,6 @@ Default: Auto-detected
 
 The registry URL is by default inferred from the npm defaults and `.npmrc`. This is beneficial as `package-json` and any project using it will work just like npm. This option is **only** intended for internal tools. You should **not** use this option in reusable packages. Prefer just using `.npmrc` whenever possible.
 
-##### agent
-
-Type: `object`
-
-Overwrite the `agent` option that is passed down to [`got`](https://github.com/sindresorhus/got#agent). This might be useful to add [proxy support](https://github.com/sindresorhus/got#proxies).
-
 ### PackageNotFoundError
 
 The error thrown when the given package name cannot be found.
@@ -86,6 +80,12 @@ The error thrown when the given package version cannot be found.
 ## Authentication
 
 Both public and private registries are supported, for both scoped and unscoped packages, as long as the registry uses either bearer tokens or basic authentication.
+
+## Proxies
+
+Proxy support is not implemented in this package. If necessary, use a global agent that modifies `fetch`.
+
+Support for this may come to [Node.js in the future](https://github.com/nodejs/undici/issues/1650).
 
 ## Related
 
