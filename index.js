@@ -32,6 +32,7 @@ export class VersionNotFoundError extends Error {
 export default async function packageJson(packageName, options) {
 	options = {
 		version: 'latest',
+		omitDeprecated: true,
 		...options,
 	};
 
@@ -87,7 +88,18 @@ export default async function packageJson(packageName, options) {
 		data = data.versions[data['dist-tags'][version]];
 		data.time = time;
 	} else if (version) {
-		if (!data.versions[version]) {
+		const versionExists = Boolean(data.versions[version]);
+
+		if (options.omitDeprecated && !versionExists) {
+			for (const [metadataVersion, metadata] of Object.entries(data.versions)) {
+				if (metadata.deprecated) {
+					delete data.versions[metadataVersion];
+				}
+			}
+		}
+
+		// TODO: is this still valid here, or does it need to be recalculated?
+		if (!versionExists) {
 			const versions = Object.keys(data.versions);
 			version = semver.maxSatisfying(versions, version);
 

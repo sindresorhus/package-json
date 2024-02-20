@@ -57,6 +57,13 @@ export type Options = {
 	Overwrite the `agent` option that is passed down to [`got`](https://github.com/sindresorhus/got#agent). This might be useful to add [proxy support](https://github.com/sindresorhus/got#proxies).
 	*/
 	readonly agent?: Agents;
+
+	/**
+	Whether or not to omit deprecated versions of a package. Has no effect if a dist tag or a specific version is provided.
+
+	@default true
+	*/
+	readonly ignoreDeprecated?: boolean;
 };
 
 export type FullMetadataOptions = {
