@@ -54,7 +54,7 @@ export type Options = {
 
 	@default true
 	*/
-	readonly ignoreDeprecated?: boolean;
+	readonly omitDeprecated?: boolean;
 };
 
 export type FullMetadataOptions = {

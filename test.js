@@ -176,7 +176,7 @@ test('omits deprecated versions by default', async t => {
 });
 
 test('optionally includes deprecated versions', async t => {
-	const json = await packageJson('ng-packagr', {version: '14', ignoreDeprecated: false});
+	const json = await packageJson('ng-packagr', {version: '14', omitDeprecated: false});
 
 	t.like(json, {
 		name: 'ng-packagr',

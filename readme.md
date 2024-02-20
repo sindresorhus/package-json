@@ -69,7 +69,7 @@ Default: Auto-detected
 
 The registry URL is by default inferred from the npm defaults and `.npmrc`. This is beneficial as `package-json` and any project using it will work just like npm. This option is **only** intended for internal tools. You should **not** use this option in reusable packages. Prefer just using `.npmrc` whenever possible.
 
-##### ignoreDeprecated
+##### omitDeprecated
 
 Type: `boolean`\
 Default: `true`
