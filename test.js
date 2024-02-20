@@ -211,4 +211,3 @@ test('does not omit specific deprecated versions', async t => {
 		deprecated: 'this package version has been deprecated as it was released by mistake',
 	});
 });
-
