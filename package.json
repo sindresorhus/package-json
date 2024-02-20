@@ -20,8 +20,7 @@
 		"node": ">=18"
 	},
 	"scripts": {
-		"//test": "xo && ava && tsd",
-		"test": "xo && ava"
+		"test": "xo && ava && tsd"
 	},
 	"files": [
 		"index.js",
@@ -39,7 +38,7 @@
 		"scoped"
 	],
 	"dependencies": {
-		"got": "^13.0.0",
+		"ky": "^1.2.0",
 		"registry-auth-token": "^5.0.2",
 		"registry-url": "^6.0.1",
 		"semver": "^7.6.0"

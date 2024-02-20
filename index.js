@@ -1,19 +1,7 @@
-import {Agent as HttpAgent} from 'node:http';
-import {Agent as HttpsAgent} from 'node:https';
-import got from 'got';
+import ky from 'ky';
 import registryUrl from 'registry-url';
 import registryAuthToken from 'registry-auth-token';
 import semver from 'semver';
-
-// These agent options are chosen to match the npm client defaults and help with performance
-// See: `npm config get maxsockets` and #50
-const agentOptions = {
-	keepAlive: true,
-	maxSockets: 50,
-};
-
-const httpAgent = new HttpAgent(agentOptions);
-const httpsAgent = new HttpsAgent(agentOptions);
 
 export class PackageNotFoundError extends Error {
 	constructor(packageName) {
@@ -53,23 +41,11 @@ export default async function packageJson(packageName, options) {
 		headers.authorization = `${authInfo.type} ${authInfo.token}`;
 	}
 
-	const gotOptions = {
-		headers,
-		agent: {
-			http: httpAgent,
-			https: httpsAgent,
-		},
-	};
-
-	if (options.agent) {
-		gotOptions.agent = options.agent;
-	}
-
 	let data;
 	try {
-		data = await got(packageUrl, gotOptions).json();
+		data = await ky(packageUrl, {headers, keepalive: true}).json();
 	} catch (error) {
-		if (error?.response?.statusCode === 404) {
+		if (error?.response?.status === 404) {
 			throw new PackageNotFoundError(packageName);
 		}
 
