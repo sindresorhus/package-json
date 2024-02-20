@@ -68,6 +68,7 @@ export type FullMetadataOptions = {
 	readonly fullMetadata: true;
 } & Options;
 
+// eslint-disable-next-line unicorn/prevent-abbreviations
 type DistTags = {
 	readonly [tagName: string]: string;
 	readonly latest: string;
