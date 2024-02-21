@@ -18,8 +18,8 @@ export class VersionNotFoundError extends Error {
 }
 
 export default async function packageJson(packageName, options = {}) {
-	options.version ??= 'latest';
-	options.omitDeprecated ??= true;
+	let {version = 'latest'} = options;
+	const {omitDeprecated = true} = options;
 
 	const scope = packageName.split('/')[0];
 	const registryUrl_ = options.registryUrl ?? registryUrl(scope);
@@ -53,7 +53,6 @@ export default async function packageJson(packageName, options = {}) {
 		return data;
 	}
 
-	let {version} = options;
 	const versionError = new VersionNotFoundError(packageName, version);
 
 	if (data['dist-tags'][version]) {
@@ -63,7 +62,7 @@ export default async function packageJson(packageName, options = {}) {
 	} else if (version) {
 		const versionExists = Boolean(data.versions[version]);
 
-		if (options.omitDeprecated && !versionExists) {
+		if (omitDeprecated && !versionExists) {
 			for (const [metadataVersion, metadata] of Object.entries(data.versions)) {
 				if (metadata.deprecated) {
 					delete data.versions[metadataVersion];
