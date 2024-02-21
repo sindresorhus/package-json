@@ -17,15 +17,12 @@ export class VersionNotFoundError extends Error {
 	}
 }
 
-export default async function packageJson(packageName, options) {
-	options = {
-		version: 'latest',
-		omitDeprecated: true,
-		...options,
-	};
+export default async function packageJson(packageName, options = {}) {
+	options.version ??= 'latest';
+	options.omitDeprecated ??= true;
 
 	const scope = packageName.split('/')[0];
-	const registryUrl_ = options.registryUrl || registryUrl(scope);
+	const registryUrl_ = options.registryUrl ?? registryUrl(scope);
 	const packageUrl = new URL(encodeURIComponent(packageName).replace(/^%40/, '@'), registryUrl_);
 	const authInfo = registryAuthToken(registryUrl_.toString(), {recursive: true});
 

@@ -213,3 +213,13 @@ test('does not omit specific deprecated versions', async t => {
 		deprecated: 'this package version has been deprecated as it was released by mistake',
 	});
 });
+
+test('handles defaults', async t => {
+	const json = await packageJson('querystring', {version: undefined, omitDeprecated: undefined});
+
+	t.like(json, {
+		name: 'querystring',
+		version: '0.2.1',
+		deprecated: 'The querystring API is considered Legacy. new code should use the URLSearchParams API instead.',
+	});
+});
