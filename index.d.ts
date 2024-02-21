@@ -48,6 +48,15 @@ export type Options = {
 	The registry URL is by default inferred from the npm defaults and `.npmrc`. This is beneficial as `package-json` and any project using it will work just like npm. This option is*only** intended for internal tools. You should __not__ use this option in reusable packages. Prefer just using `.npmrc` whenever possible.
 	*/
 	readonly registryUrl?: string;
+
+	/**
+	Whether or not to omit deprecated versions of a package.
+
+	If set, versions marked as deprecated on the registry are omitted from results. Providing a dist tag or a specific version will still return that version, even if it's deprecated. If no version can be found once deprecated versions are omitted, a `VersionNotFoundError` is thrown.
+
+	@default true
+	*/
+	readonly omitDeprecated?: boolean;
 };
 
 export type FullMetadataOptions = {

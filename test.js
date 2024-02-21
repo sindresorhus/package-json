@@ -52,12 +52,14 @@ test('incomplete version x', async t => {
 	t.is(json.version.slice(0, 2), '0.');
 });
 
-// TODO: Find an alternative npm instance.
-// test.failing('custom registry url', async t => {
-// 	const json = await packageJson('ava', {registryUrl: 'https://npm.open-registry.dev/'});
-// 	t.is(json.name, 'ava');
-// 	t.falsy(json.versions);
-// });
+test('custom registry url', async t => {
+	const json = await packageJson('ava', {registryUrl: 'https://registry.yarnpkg.com'});
+
+	t.like(json, {
+		name: 'ava',
+		versions: undefined,
+	});
+});
 
 test('scoped - latest version', async t => {
 	const json = await packageJson('@sindresorhus/df');
@@ -163,4 +165,51 @@ test('private registry (basic token)', async t => {
 	});
 
 	server.close();
+});
+
+test('omits deprecated versions by default', async t => {
+	const json = await packageJson('ng-packagr', {version: '14'});
+
+	t.like(json, {
+		name: 'ng-packagr',
+		version: '14.2.2',
+		deprecated: undefined,
+	});
+});
+
+test('optionally includes deprecated versions', async t => {
+	const json = await packageJson('ng-packagr', {version: '14', omitDeprecated: false});
+
+	t.like(json, {
+		name: 'ng-packagr',
+		version: '14.3.0',
+		deprecated: 'this package version has been deprecated as it was released by mistake',
+	});
+});
+
+test('errors if all versions are deprecated', async t => {
+	await t.throwsAsync(
+		packageJson('querystring', {version: '0'}),
+		{instanceOf: VersionNotFoundError},
+	);
+});
+
+test('does not omit specific deprecated dist tags', async t => {
+	const json = await packageJson('querystring', {version: 'latest'});
+
+	t.like(json, {
+		name: 'querystring',
+		version: '0.2.1',
+		deprecated: 'The querystring API is considered Legacy. new code should use the URLSearchParams API instead.',
+	});
+});
+
+test('does not omit specific deprecated versions', async t => {
+	const json = await packageJson('ng-packagr', {version: '14.3.0'});
+
+	t.like(json, {
+		name: 'ng-packagr',
+		version: '14.3.0',
+		deprecated: 'this package version has been deprecated as it was released by mistake',
+	});
 });
