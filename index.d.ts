@@ -1,3 +1,209 @@
+import type {PackageJson} from 'type-fest';
+
+/**
+A person who has been involved in creating or maintaining the package.
+*/
+type Person = Readonly<PackageJson.Person>;
+
+// eslint-disable-next-line unicorn/prevent-abbreviations
+type Dist = Readonly<{
+	/**
+	The URL of the tarball containing the payload for this package.
+	*/
+	tarball: string;
+
+	/**
+	The SHA-1 sum of the tarball.
+	*/
+	shasum: string;
+
+	/**
+	A string in the format `<hashAlgorithm>-<base64-hash>`. Refer to the {@link https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity Subresource Integrity} docs on MDN and the {@link https://github.com/npm/cacache#integrity `cacache`} package for more information.
+	@since April 2017
+	*/
+	integrity: string;
+
+	/**
+	The number of files in the tarball, folder excluded.
+	@since February 2018
+	*/
+	fileCount: number;
+
+	/**
+	The total bytes of the unpacked files in the tarball.
+	@since February 2018
+	*/
+	unpackedSize: number;
+
+	/**
+	A PGP signature in the format `<package>@<version>:<integrity>`.
+
+	@deprecated
+	@since April 2018
+	*/
+	npmSig: boolean; // TODO: this has changed?
+
+	signatures: Array<{
+		keyid: string;
+		sig: string;
+	}>;
+}>;
+
+type AbbreviatedVersionPackageJsonFields = (
+	| 'dependencies'
+	| 'optionalDependencies'
+	| 'devDependencies'
+	| 'bundleDependencies'
+	| 'peerDependencies'
+	| 'bin'
+	| 'directories'
+	| 'engines'
+	| 'cpu'
+	| 'os'
+);
+
+type AbbreviatedVersion = Readonly<{
+	/**
+	The name of the package.
+	*/
+	name: string;
+
+	/**
+	Package version, parseable by [`node-semver`](https://github.com/npm/node-semver).
+	*/
+	version: string;
+
+	dist: Dist;
+
+	/**
+	The deprecation warnings message of this version. A version is deprecated if this field is set.
+	*/
+	deprecated?: string;
+
+	/**
+	Whether or not this version has a shrinkwrap used to install it. If this field is `undefined`, the client must determine through other means if a shrinkwrap exists.
+	*/
+	_hasShrinkwrap?: boolean;
+
+	/**
+	Whether or not this version has an `install` script.
+	*/
+	hasInstallScript?: boolean;
+}> & Pick<Readonly<PackageJson>, AbbreviatedVersionPackageJsonFields>;
+
+// eslint-disable-next-line unicorn/prevent-abbreviations
+type DistTags = {
+	[tagName: string]: string;
+	latest: string;
+};
+
+type AbbreviatedMetadata = Readonly<{
+	/**
+	The name of the package.
+	*/
+	name: string;
+
+	/**
+	An {@link https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations ISO timestamp} of the last time the package was modified.
+	*/
+	modified: string;
+
+	'dist-tags': DistTags;
+
+	versions: Record<string, AbbreviatedVersion>;
+}>;
+
+type HoistedPackageJsonFields = (
+	| 'author'
+	| 'bugs'
+	| 'contributors'
+	| 'description'
+	| 'homepage'
+	| 'keywords'
+	| 'license'
+	| 'repository'
+);
+
+// Hoisted from latest version
+type HoistedData = Readonly<{
+	/**
+	People with permission to publish this package. Not authoritative but informational.
+	*/
+	maintainers?: Person[];
+
+	/**
+	The first 64K of the readme data for the most-recently published version of the package.
+	*/
+	readme?: string;
+
+	/**
+	The name of the file from which the readme data was taken.
+	*/
+	readmeFilename?: string;
+}> & Pick<Readonly<PackageJson>, HoistedPackageJsonFields>;
+
+type FullVersion = Readonly<{
+	/**
+	`package@version`
+	*/
+	_id: string;
+
+	_shasum: string;
+
+	_from: string;
+
+	/**
+	The version of npm used to publish this package.
+	*/
+	_npmVersion: string;
+
+	/**
+	The version of node used to publish this package.
+	*/
+	_nodeVersion: string;
+
+	/**
+	The author object for the npm user who published this version.
+	*/
+	_npmUser: Person; // TODO: person or always object?
+}> & Readonly<PackageJson> & Omit<AbbreviatedVersion, 'hasInstallScript'> & HoistedData;
+
+type FullMetadata = Readonly<{
+	/**
+	The name of the package, used as an ID in CouchDB.
+	*/
+	_id: string;
+
+	/**
+	The revision number of this version of the document in CouchDB.
+	*/
+	_rev: string;
+
+	/**
+	A mapping of versions to the time they were published. Each value is an {@link https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations ISO timestamp}.
+	*/
+	time: {
+		[version: string]: string;
+
+		/**
+		When the package was created.
+		*/
+		created: string;
+
+		/**
+		When the package was last modified.
+		*/
+		modified: string;
+	};
+
+	/**
+	NPM users who have starred the package.
+	*/
+	users?: Readonly<Record<string, boolean>>;
+
+	versions: Readonly<Record<string, FullVersion>>;
+}> & AbbreviatedMetadata & HoistedData;
+
 /**
 The error thrown when the given package version cannot be found.
 */
@@ -67,91 +273,6 @@ export type FullMetadataOptions = {
 	*/
 	readonly fullMetadata: true;
 } & Options;
-
-// eslint-disable-next-line unicorn/prevent-abbreviations
-type DistTags = {
-	readonly [tagName: string]: string;
-	readonly latest: string;
-};
-
-type AbbreviatedVersion = {
-	readonly [key: string]: unknown;
-	readonly name: string;
-	readonly version: string;
-	readonly dist: {
-		readonly shasum: string;
-		readonly tarball: string;
-		readonly integrity?: string;
-	};
-	readonly deprecated?: string;
-	readonly dependencies?: Readonly<Record<string, string>>;
-	readonly optionalDependencies?: Readonly<Record<string, string>>;
-	readonly devDependencies?: Readonly<Record<string, string>>;
-	readonly bundleDependencies?: Readonly<Record<string, string>>;
-	readonly peerDependencies?: Readonly<Record<string, string>>;
-	readonly bin?: Readonly<Record<string, string>>;
-	readonly directories?: readonly string[];
-	readonly engines?: Readonly<Record<string, string>>;
-	readonly _hasShrinkwrap?: boolean;
-};
-
-type Person = {
-	readonly name?: string;
-	readonly email?: string;
-	readonly url?: string;
-};
-
-type HoistedData = {
-	readonly author?: Person;
-	readonly bugs?:
-	| {readonly url: string; readonly email?: string}
-	| {readonly url?: string; readonly email: string};
-	readonly contributors?: readonly Person[];
-	readonly description?: string;
-	readonly homepage?: string;
-	readonly keywords?: readonly string[];
-	readonly license?: string;
-	readonly maintainers?: readonly Person[];
-	readonly readme?: string;
-	readonly readmeFilename?: string;
-	readonly repository?: {readonly type: string; readonly url: string};
-};
-
-type FullVersion = {
-	readonly [key: string]: unknown;
-	readonly _id: string;
-	readonly _nodeVersion: string;
-	readonly _npmUser: string;
-	readonly _npmVersion: string;
-	readonly main?: string;
-	readonly files?: readonly string[];
-	readonly man?: readonly string[];
-	readonly scripts?: Readonly<Record<string, string>>;
-	readonly gitHead?: string;
-	readonly types?: string;
-	readonly typings?: string;
-} & AbbreviatedVersion & HoistedData;
-
-export type FullMetadata = {
-	readonly [key: string]: unknown;
-	readonly _id: string;
-	readonly _rev: string;
-	readonly time: {
-		readonly [version: string]: string;
-		readonly created: string;
-		readonly modified: string;
-	};
-	readonly users?: Readonly<Record<string, boolean>>;
-	readonly versions: Readonly<Record<string, FullVersion>>;
-} & AbbreviatedMetadata & HoistedData;
-
-export type AbbreviatedMetadata = {
-	readonly [key: string]: unknown;
-	readonly 'dist-tags': DistTags;
-	readonly modified: string;
-	readonly name: string;
-	readonly versions: Readonly<Record<string, AbbreviatedVersion>>;
-};
 
 /**
 Get metadata of a package from the npm registry.
