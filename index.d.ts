@@ -281,12 +281,12 @@ console.log(await packageJson('ava'));
 console.log(await packageJson('@sindresorhus/df'));
 ```
 */
-export default function packageJson<T extends Options>(packageName: string, options?: T): Promise<(
-	T extends {fullMetadata: true}
-		? T extends {allVersions: true}
+export default function packageJson<ProvidedOptions extends Options>(packageName: string, options?: ProvidedOptions): Promise<(
+	ProvidedOptions extends {fullMetadata: true}
+		? ProvidedOptions extends {allVersions: true}
 			? FullMetadata
 			: FullVersion & Pick<FullMetadata, 'time'>
-		: T extends {allVersions: true}
+		: ProvidedOptions extends {allVersions: true}
 			? AbbreviatedMetadata
 			: AbbreviatedVersion
 )>;
