@@ -222,7 +222,7 @@ export class PackageNotFoundError extends Error {
 	constructor(packageName: string);
 }
 
-export type Options = {
+export type Options = Readonly<{
 	/**
 	Package version such as `1.0.0` or a [dist tag](https://docs.npmjs.com/cli/dist-tag) such as `latest`.
 
@@ -234,26 +234,26 @@ export type Options = {
 
 	@default 'latest'
 	*/
-	readonly version?: string;
+	version?: string;
 
 	/**
 	By default, only an abbreviated metadata object is returned for performance reasons. [Read more.](https://github.com/npm/registry/blob/master/docs/responses/package-metadata.md)
 
 	@default false
 	*/
-	readonly fullMetadata?: boolean;
+	fullMetadata?: boolean;
 
 	/**
 	Return the [main entry](https://registry.npmjs.org/ava) containing all versions.
 
 	@default false
 	*/
-	readonly allVersions?: boolean;
+	allVersions?: boolean;
 
 	/**
 	The registry URL is by default inferred from the npm defaults and `.npmrc`. This is beneficial as `package-json` and any project using it will work just like npm. This option is*only** intended for internal tools. You should __not__ use this option in reusable packages. Prefer just using `.npmrc` whenever possible.
 	*/
-	readonly registryUrl?: string;
+	registryUrl?: string;
 
 	/**
 	Whether or not to omit deprecated versions of a package.
@@ -262,17 +262,8 @@ export type Options = {
 
 	@default true
 	*/
-	readonly omitDeprecated?: boolean;
-};
-
-export type FullMetadataOptions = {
-	/**
-	By default, only an abbreviated metadata object is returned for performance reasons. [Read more.](https://github.com/npm/registry/blob/master/docs/responses/package-metadata.md)
-
-	@default false
-	*/
-	readonly fullMetadata: true;
-} & Options;
+	omitDeprecated?: boolean;
+}>;
 
 /**
 Get metadata of a package from the npm registry.
@@ -290,5 +281,12 @@ console.log(await packageJson('ava'));
 console.log(await packageJson('@sindresorhus/df'));
 ```
 */
-export default function packageJson(packageName: string, options: FullMetadataOptions): Promise<FullMetadata>;
-export default function packageJson(packageName: string, options?: Options): Promise<AbbreviatedMetadata>;
+export default function packageJson<T extends Options>(packageName: string, options?: T): Promise<(
+	T extends {fullMetadata: true}
+		? T extends {allVersions: true}
+			? FullMetadata
+			: FullVersion & Pick<FullMetadata, 'time'>
+		: T extends {allVersions: true}
+			? AbbreviatedMetadata
+			: AbbreviatedVersion
+)>;
