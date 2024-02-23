@@ -44,10 +44,10 @@
 		"semver": "^7.6.0"
 	},
 	"devDependencies": {
-		"@types/node": "^20.11.5",
+		"@types/node": "^18",
 		"ava": "^6.1.1",
 		"private-registry-mock": "^0.2.0",
-		"tsd": "^0.30.5",
+		"tsd": "^0.30.6",
 		"xo": "^0.57.0"
 	}
 }
