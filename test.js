@@ -144,7 +144,7 @@ test('private registry (bearer token)', async t => {
 		name: '@mockscope/foobar',
 	});
 
-	server.close();
+	await server.close();
 });
 
 test('private registry (basic token)', async t => {
@@ -164,7 +164,7 @@ test('private registry (basic token)', async t => {
 		name: '@mockscope2/foobar',
 	});
 
-	server.close();
+	await server.close();
 });
 
 test('omits deprecated versions by default', async t => {

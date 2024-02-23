@@ -46,7 +46,7 @@
 	"devDependencies": {
 		"@types/node": "^18",
 		"ava": "^6.1.1",
-		"private-registry-mock": "^0.2.0",
+		"private-registry-mock": "^0.3.0",
 		"tsd": "^0.30.6",
 		"xo": "^0.57.0"
 	}
