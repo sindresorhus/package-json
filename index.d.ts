@@ -67,6 +67,7 @@ type AbbreviatedVersionPackageJsonFields = (
 	| 'devDependencies'
 	| 'bundleDependencies'
 	| 'peerDependencies'
+	| 'peerDependenciesMeta'
 	| 'bin'
 	| 'directories'
 	| 'engines'
