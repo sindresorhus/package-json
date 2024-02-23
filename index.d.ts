@@ -1,8 +1,5 @@
 import type {PackageJson} from 'type-fest';
 
-/**
-A person who has been involved in creating or maintaining the package.
-*/
 type Person = Readonly<PackageJson.Person>;
 
 type PersonObject = Exclude<Person, string>;
@@ -129,7 +126,7 @@ type AbbreviatedMetadata = Readonly<{
 	versions: Record<string, AbbreviatedVersion>;
 }>;
 
-type Repository = Readonly<Exclude<PackageJson.PackageJsonStandard['repository'], string>>;
+type Repository = Readonly<Exclude<PackageJson['repository'], string>>;
 
 type HoistedPackageJsonFields = (
 	| 'author'
