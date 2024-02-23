@@ -1,4 +1,4 @@
-import {expectAssignable, expectError} from 'tsd';
+import {expectType, expectAssignable, expectError} from 'tsd';
 import packageJson, {
 	type FullMetadata,
 	type FullVersion,
@@ -23,11 +23,11 @@ expectAssignable<Promise<FullMetadata>>(
 );
 
 const abbreviatedMetadata = await packageJson('package-json');
-expectAssignable<string>(abbreviatedMetadata.version);
+expectType<string>(abbreviatedMetadata.version);
 expectError(abbreviatedMetadata.versions);
 
 const fullMetadata = await packageJson('package-json', {fullMetadata: true});
-expectAssignable<string>(fullMetadata.version);
+expectType<string>(fullMetadata.version);
 expectError(fullMetadata.versions);
 
 const abbreviatedVersions = await packageJson('package-json', {allVersions: true});
@@ -38,13 +38,13 @@ const fullVersions = await packageJson('package-json', {fullMetadata: true, allV
 expectAssignable<FullVersion | undefined>(fullVersions.versions['1.2.3']);
 expectError(fullVersions.version);
 
-expectAssignable<typeof PackageNotFoundError>(PackageNotFoundError);
-expectAssignable<typeof VersionNotFoundError>(VersionNotFoundError);
+expectType<typeof PackageNotFoundError>(PackageNotFoundError);
+expectType<typeof VersionNotFoundError>(VersionNotFoundError);
 
 const packageNotFoundError = new PackageNotFoundError('foo');
 packageNotFoundError instanceof PackageNotFoundError; // eslint-disable-line @typescript-eslint/no-unused-expressions
-expectAssignable<PackageNotFoundError>(packageNotFoundError);
+expectType<PackageNotFoundError>(packageNotFoundError);
 
 const versionNotFoundError = new VersionNotFoundError('foo', 'bar');
 versionNotFoundError instanceof VersionNotFoundError; // eslint-disable-line @typescript-eslint/no-unused-expressions
-expectAssignable<VersionNotFoundError>(versionNotFoundError);
+expectType<VersionNotFoundError>(versionNotFoundError);
