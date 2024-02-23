@@ -5,10 +5,12 @@ A person who has been involved in creating or maintaining the package.
 */
 type Person = Readonly<PackageJson.Person>;
 
+type PersonObject = Exclude<Person, string>;
+
 // eslint-disable-next-line unicorn/prevent-abbreviations
 type Dist = Readonly<{
 	/**
-	The URL of the tarball containing the payload for this package.
+	The URL of the tarball containing the payload for the package.
 	*/
 	tarball: string;
 
@@ -19,32 +21,45 @@ type Dist = Readonly<{
 
 	/**
 	A string in the format `<hashAlgorithm>-<base64-hash>`. Refer to the {@link https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity Subresource Integrity} docs on MDN and the {@link https://github.com/npm/cacache#integrity `cacache`} package for more information.
+
 	@since April 2017
 	*/
-	integrity: string;
+	integrity?: string;
 
 	/**
 	The number of files in the tarball, folder excluded.
+
 	@since February 2018
 	*/
-	fileCount: number;
+	fileCount?: number;
 
 	/**
 	The total bytes of the unpacked files in the tarball.
+
 	@since February 2018
 	*/
-	unpackedSize: number;
+	unpackedSize?: number;
 
 	/**
 	A PGP signature in the format `<package>@<version>:<integrity>`.
 
-	@deprecated
 	@since April 2018
+	@deprecated April 2023, see https://docs.npmjs.com/about-registry-signatures
 	*/
-	npmSig: boolean; // TODO: this has changed?
+	'npm-signature'?: string;
 
-	signatures: Array<{
+	/**
+	ECDSA signature(s).
+
+	@see https://docs.npmjs.com/about-registry-signatures
+	@since April 2023
+	*/
+	signatures?: Array<{
+		/**
+		A SHA-256 public key.
+		*/
 		keyid: string;
+
 		sig: string;
 	}>;
 }>;
@@ -60,6 +75,7 @@ type AbbreviatedVersionPackageJsonFields = (
 	| 'engines'
 	| 'cpu'
 	| 'os'
+	| 'funding'
 );
 
 type AbbreviatedVersion = Readonly<{
@@ -113,6 +129,8 @@ type AbbreviatedMetadata = Readonly<{
 	versions: Record<string, AbbreviatedVersion>;
 }>;
 
+type Repository = Readonly<Exclude<PackageJson.PackageJsonStandard['repository'], string>>;
+
 type HoistedPackageJsonFields = (
 	| 'author'
 	| 'bugs'
@@ -121,15 +139,14 @@ type HoistedPackageJsonFields = (
 	| 'homepage'
 	| 'keywords'
 	| 'license'
-	| 'repository'
 );
 
 // Hoisted from latest version
 type HoistedData = Readonly<{
 	/**
-	People with permission to publish this package. Not authoritative but informational.
+	People with permission to publish the package. Not authoritative but informational.
 	*/
-	maintainers?: Person[];
+	maintainers?: PersonObject[];
 
 	/**
 	The first 64K of the readme data for the most-recently published version of the package.
@@ -140,6 +157,8 @@ type HoistedData = Readonly<{
 	The name of the file from which the readme data was taken.
 	*/
 	readmeFilename?: string;
+
+	repository?: Repository;
 }> & Pick<Readonly<PackageJson>, HoistedPackageJsonFields>;
 
 type FullVersion = Readonly<{
@@ -153,20 +172,24 @@ type FullVersion = Readonly<{
 	_from: string;
 
 	/**
-	The version of npm used to publish this package.
+	The version of npm used to publish the package.
 	*/
 	_npmVersion: string;
 
 	/**
-	The version of node used to publish this package.
+	The version of Node.js used to publish the package.
 	*/
 	_nodeVersion: string;
 
 	/**
-	The author object for the npm user who published this version.
+	The npm user who published this version.
 	*/
-	_npmUser: Person; // TODO: person or always object?
-}> & Readonly<PackageJson> & Omit<AbbreviatedVersion, 'hasInstallScript'> & HoistedData;
+	_npmUser: PersonObject;
+
+	licenseText?: string;
+
+	gitHead?: string;
+}> & Readonly<Omit<PackageJson, 'repository'>> & Omit<AbbreviatedVersion, 'hasInstallScript'> & HoistedData;
 
 type FullMetadata = Readonly<{
 	/**
