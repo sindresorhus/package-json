@@ -28,7 +28,8 @@ expectError(abbreviatedMetadata.versions);
 
 const fullMetadata = await packageJson('package-json', {fullMetadata: true});
 expectType<string>(fullMetadata.version);
-expectError(fullMetadata.versions);
+expectType<unknown>(fullMetadata.versions);
+expectError(fullMetadata.versions['1.2.3']);
 
 const abbreviatedVersions = await packageJson('package-json', {allVersions: true});
 expectAssignable<AbbreviatedVersion | undefined>(abbreviatedVersions.versions['1.2.3']);
