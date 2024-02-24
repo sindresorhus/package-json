@@ -53,7 +53,7 @@ The version can also be in any format supported by the [semver](https://github.c
 Type: `boolean`\
 Default: `false`
 
-By default, only an abbreviated metadata object is returned for performance reasons. [Read more](https://github.com/npm/registry/blob/master/docs/responses/package-metadata.md), or see the [type definitions](./index.d.ts).
+By default, only an abbreviated metadata object is returned for performance reasons. [Read more](https://github.com/npm/registry/blob/master/docs/responses/package-metadata.md), or see the [type definitions](index.d.ts).
 
 ##### allVersions
 
