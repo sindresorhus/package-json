@@ -17,10 +17,23 @@ export class VersionNotFoundError extends Error {
 	}
 }
 
-export default async function packageJson(packageName, options = {}) {
-	let {version = 'latest'} = options;
-	const {omitDeprecated = true} = options;
+// TODO: should this include the deprecation message?
 
+export class DeprecatedPackageError extends Error {
+	constructor(packageName) {
+		super(`Package \`${packageName}\` is deprecated`);
+		this.name = 'DeprecatedPackageError';
+	}
+}
+
+export class DeprecatedVersionError extends Error {
+	constructor(packageName, version) {
+		super(`Version or range \`${version}\` for package \`${packageName}\` is deprecated`);
+		this.name = 'DeprecatedVersionError';
+	}
+}
+
+export default async function packageJson(packageName, {version = 'latest', omitDeprecated = true, ...options} = {}) { // eslint-disable-line complexity
 	const scope = packageName.split('/')[0];
 	const registryUrl_ = options.registryUrl ?? registryUrl(scope);
 	const packageUrl = new URL(encodeURIComponent(packageName).replace(/^%40/, '@'), registryUrl_);
@@ -49,20 +62,14 @@ export default async function packageJson(packageName, options = {}) {
 		throw error;
 	}
 
-	if (options.allVersions) {
-		return data;
+	const isPackageDeprecated = Object.values(data.versions).every(metadataVersion => metadataVersion.deprecated);
+
+	if (isPackageDeprecated && omitDeprecated) {
+		throw new DeprecatedPackageError(packageName);
 	}
 
-	const versionError = new VersionNotFoundError(packageName, version);
-
-	if (data['dist-tags'][version]) {
-		const {time} = data;
-		data = data.versions[data['dist-tags'][version]];
-		data.time = time;
-	} else if (version) {
-		const versionExists = Boolean(data.versions[version]);
-
-		if (omitDeprecated && !versionExists) {
+	if (options.allVersions) {
+		if (omitDeprecated) {
 			for (const [metadataVersion, metadata] of Object.entries(data.versions)) {
 				if (metadata.deprecated) {
 					delete data.versions[metadataVersion];
@@ -70,12 +77,33 @@ export default async function packageJson(packageName, options = {}) {
 			}
 		}
 
-		if (!versionExists) {
-			const versions = Object.keys(data.versions);
+		return data;
+	}
+
+	const originalVersion = version;
+
+	if (data['dist-tags'][version]) {
+		const {time} = data;
+		data = data.versions[data['dist-tags'][version]];
+		data.time = time;
+	} else if (version) {
+		if (!data.versions[version]) {
+			const originalVersions = Object.keys(data.versions);
+			let versions = originalVersions;
+
+			if (omitDeprecated) {
+				versions = versions.filter(v => !data.versions[v].deprecated);
+			}
+
+			const originalVersionExists = Boolean(semver.maxSatisfying(originalVersions, version));
 			version = semver.maxSatisfying(versions, version);
 
 			if (!version) {
-				throw versionError;
+				if (omitDeprecated && originalVersionExists) {
+					throw new DeprecatedVersionError(packageName, originalVersion);
+				}
+
+				throw new VersionNotFoundError(packageName, originalVersion);
 			}
 		}
 
@@ -84,8 +112,12 @@ export default async function packageJson(packageName, options = {}) {
 		data.time = time;
 
 		if (!data) {
-			throw versionError;
+			throw new VersionNotFoundError(packageName, originalVersion);
 		}
+	}
+
+	if (omitDeprecated && data.deprecated) {
+		throw new DeprecatedVersionError(packageName, originalVersion);
 	}
 
 	return data;

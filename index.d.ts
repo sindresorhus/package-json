@@ -243,6 +243,24 @@ export class PackageNotFoundError extends Error {
 	constructor(packageName: string);
 }
 
+/**
+The error thrown when the given package is deprecated.
+*/
+export class DeprecatedPackageError extends Error {
+	readonly name: 'DeprecatedPackageError';
+
+	constructor(packageName: string);
+}
+
+/**
+The error thrown when the given package version or range is deprecated.
+*/
+export class DeprecatedVersionError extends Error {
+	readonly name: 'DeprecatedVersionError';
+
+	constructor(packageName: string, version: string);
+}
+
 export type Options = Readonly<{
 	/**
 	Package version such as `1.0.0` or a [dist tag](https://docs.npmjs.com/cli/dist-tag) such as `latest`.
@@ -279,7 +297,7 @@ export type Options = Readonly<{
 	/**
 	Whether or not to omit deprecated versions of a package.
 
-	If set, versions marked as deprecated on the registry are omitted from results. Providing a dist tag or a specific version will still return that version, even if it's deprecated. If no version can be found once deprecated versions are omitted, a `VersionNotFoundError` is thrown.
+	If set, versions marked as deprecated on the registry are omitted from results. If all versions of a package are deprecated, a `DeprecatedPackageError` is thrown. If no version can be found once deprecated versions are omitted, a `DeprecatedVersionError` is thrown.
 
 	@default true
 	*/
