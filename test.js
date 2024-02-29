@@ -2,7 +2,12 @@ import {promisify} from 'node:util';
 import http from 'node:http';
 import test from 'ava';
 import privateRegistry from 'private-registry-mock';
-import packageJson, {PackageNotFoundError, VersionNotFoundError} from './index.js';
+import packageJson, {
+	PackageNotFoundError,
+	VersionNotFoundError,
+	DeprecatedPackageError,
+	DeprecatedVersionError,
+} from './index.js';
 
 test('latest version', async t => {
 	const json = await packageJson('ava');
@@ -113,16 +118,23 @@ test('scoped - dist tag', async t => {
 });
 
 test('reject when package doesn\'t exist', async t => {
-	await t.throwsAsync(packageJson('nnnope'), {instanceOf: PackageNotFoundError});
+	await t.throwsAsync(packageJson('nnnope'), {
+		instanceOf: PackageNotFoundError,
+		message: 'Package `nnnope` could not be found',
+	});
 });
 
 test('reject when version doesn\'t exist', async t => {
-	await t.throwsAsync(packageJson('hapi', {version: '6.6.6'}), {instanceOf: VersionNotFoundError});
+	await t.throwsAsync(packageJson('meow', {version: '6.6.6'}), {
+		instanceOf: VersionNotFoundError,
+		message: 'Version `6.6.6` for package `meow` could not be found',
+	});
 });
 
 test('does not send any auth token for unconfigured registries', async t => {
 	const server = http.createServer((request, response) => {
-		response.end(JSON.stringify({headers: request.headers, 'dist-tags': {}}));
+		const mock = {headers: request.headers, 'dist-tags': {}, versions: {'1.0.0': {}}};
+		response.end(JSON.stringify(mock));
 	});
 
 	await promisify(server.listen.bind(server))(63_144, '127.0.0.1');
@@ -177,6 +189,13 @@ test('omits deprecated versions by default', async t => {
 	});
 });
 
+test('does not include deprecated versions in all versions by default', async t => {
+	const json = await packageJson('ng-packagr', {allVersions: true});
+	const versions = Object.values(json.versions);
+
+	t.true(versions.every(version => version.deprecated === undefined));
+});
+
 test('optionally includes deprecated versions', async t => {
 	const json = await packageJson('ng-packagr', {version: '14', omitDeprecated: false});
 
@@ -187,39 +206,55 @@ test('optionally includes deprecated versions', async t => {
 	});
 });
 
-test('errors if all versions are deprecated', async t => {
-	await t.throwsAsync(
-		packageJson('querystring', {version: '0'}),
-		{instanceOf: VersionNotFoundError},
-	);
+test('optionally includes deprecated versions - all versions', async t => {
+	const json = await packageJson('ng-packagr', {allVersions: true, omitDeprecated: false});
+	const versions = Object.values(json.versions);
+
+	t.false(versions.every(version => version.deprecated === undefined));
 });
 
-test('does not omit specific deprecated dist tags', async t => {
-	const json = await packageJson('querystring', {version: 'latest'});
+test('errors if all versions are deprecated', async t => {
+	await t.throwsAsync(packageJson('querystring'), {
+		instanceOf: DeprecatedPackageError,
+		message: 'Package `querystring` is deprecated',
+	});
+});
+
+test('optionally does not throw if all versions are deprecated', async t => {
+	const json = await packageJson('querystring', {omitDeprecated: false});
 
 	t.like(json, {
 		name: 'querystring',
 		version: '0.2.1',
-		deprecated: 'The querystring API is considered Legacy. new code should use the URLSearchParams API instead.',
 	});
 });
 
-test('does not omit specific deprecated versions', async t => {
-	const json = await packageJson('ng-packagr', {version: '14.3.0'});
+test('errors if specific dist tag is deprecated', async t => {
+	await t.throwsAsync(packageJson('vue', {version: 'legacy'}), {
+		instanceOf: DeprecatedVersionError,
+		message: 'Version or range `legacy` for package `vue` is deprecated',
+	});
+});
 
-	t.like(json, {
-		name: 'ng-packagr',
-		version: '14.3.0',
-		deprecated: 'this package version has been deprecated as it was released by mistake',
+test('errors if specific range is deprecated', async t => {
+	await t.throwsAsync(packageJson('tsparticles', {version: '2.x'}), {
+		instanceOf: DeprecatedVersionError,
+		message: 'Version or range `2.x` for package `tsparticles` is deprecated',
+	});
+});
+
+test('errors if specific version is deprecated', async t => {
+	await t.throwsAsync(packageJson('polka-bearer-token', {version: '0.2.0'}), {
+		instanceOf: DeprecatedVersionError,
+		message: 'Version or range `0.2.0` for package `polka-bearer-token` is deprecated',
 	});
 });
 
 test('handles defaults', async t => {
-	const json = await packageJson('querystring', {version: undefined, omitDeprecated: undefined});
+	await t.throwsAsync(packageJson('querystring', {version: undefined, omitDeprecated: undefined}));
 
-	t.like(json, {
-		name: 'querystring',
-		version: '0.2.1',
-		deprecated: 'The querystring API is considered Legacy. new code should use the URLSearchParams API instead.',
-	});
+	const allVersions = await packageJson('ava', {allVersions: true});
+	const json = await packageJson('ava', {version: undefined});
+
+	t.is(json.version, allVersions['dist-tags'].latest);
 });

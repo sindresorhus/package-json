@@ -6,6 +6,8 @@ import packageJson, {
 	type AbbreviatedVersion,
 	PackageNotFoundError,
 	VersionNotFoundError,
+	DeprecatedPackageError,
+	DeprecatedVersionError,
 } from './index.js';
 
 expectAssignable<Promise<AbbreviatedVersion>>(packageJson('package-json'));
@@ -49,3 +51,11 @@ expectType<PackageNotFoundError>(packageNotFoundError);
 const versionNotFoundError = new VersionNotFoundError('foo', 'bar');
 versionNotFoundError instanceof VersionNotFoundError; // eslint-disable-line @typescript-eslint/no-unused-expressions
 expectType<VersionNotFoundError>(versionNotFoundError);
+
+const deprecatedPackageError = new DeprecatedPackageError('foo');
+deprecatedPackageError instanceof DeprecatedPackageError; // eslint-disable-line @typescript-eslint/no-unused-expressions
+expectType<DeprecatedPackageError>(deprecatedPackageError);
+
+const deprecatedVersionError = new DeprecatedVersionError('foo', 'bar');
+deprecatedVersionError instanceof DeprecatedVersionError; // eslint-disable-line @typescript-eslint/no-unused-expressions
+expectType<DeprecatedVersionError>(deprecatedVersionError);

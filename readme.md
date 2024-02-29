@@ -76,7 +76,7 @@ Default: `true`
 
 Whether or not to omit deprecated versions of a package.
 
-If set, versions marked as deprecated on the registry are omitted from results. Providing a dist tag or a specific version will still return that version, even if it's deprecated. If no version can be found once deprecated versions are omitted, a [`VersionNotFoundError`](#versionnotfounderror) is thrown.
+If set, versions marked as deprecated on the registry are omitted from results. If all versions of a package are deprecated, a [`DeprecatedPackageError`](#deprecatedpackageerror) is thrown. If no version can be found once deprecated versions are omitted, a [`DeprecatedVersionError`](#deprecatedversionerror) is thrown.
 
 ### PackageNotFoundError
 
@@ -85,6 +85,14 @@ The error thrown when the given package name cannot be found.
 ### VersionNotFoundError
 
 The error thrown when the given package version cannot be found.
+
+### DeprecatedPackageError
+
+The error thrown when the given package is deprecated.
+
+### DeprecatedVersionError
+
+The error thrown when the given package version or range is deprecated.
 
 ## Authentication
 
