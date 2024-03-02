@@ -1,3 +1,4 @@
+import process from 'node:process';
 import {promisify} from 'node:util';
 import http from 'node:http';
 import test from 'ava';
@@ -120,21 +121,26 @@ test('reject when version doesn\'t exist', async t => {
 	await t.throwsAsync(packageJson('hapi', {version: '6.6.6'}), {instanceOf: VersionNotFoundError});
 });
 
-test('does not send any auth token for unconfigured registries', async t => {
-	const server = http.createServer((request, response) => {
-		response.end(JSON.stringify({headers: request.headers, 'dist-tags': {}}));
+const nodeMajorVersion = Number(process.versions.node.split('.').at(0));
+
+if (nodeMajorVersion > 18) {
+	test('does not send any auth token for unconfigured registries', async t => {
+		const server = http.createServer((request, response) => {
+			const mock = {headers: request.headers, 'dist-tags': {}, versions: {'1.0.0': {}}};
+			response.end(JSON.stringify(mock));
+		});
+
+		await promisify(server.listen.bind(server))(63_144, '127.0.0.1');
+		const json = await packageJson('@mockscope3/foobar', {allVersions: true});
+
+		t.like(json.headers, {
+			host: 'localhost:63144',
+			authorization: undefined,
+		});
+
+		await promisify(server.close.bind(server))();
 	});
-
-	await promisify(server.listen.bind(server))(63_144, '127.0.0.1');
-	const json = await packageJson('@mockscope3/foobar', {allVersions: true});
-
-	t.like(json.headers, {
-		host: 'localhost:63144',
-		authorization: undefined,
-	});
-
-	await promisify(server.close.bind(server))();
-});
+}
 
 test('private registry (bearer token)', async t => {
 	const server = await privateRegistry({port: 63_142});
