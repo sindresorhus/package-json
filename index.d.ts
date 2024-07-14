@@ -146,16 +146,6 @@ type HoistedData = Readonly<{
 	*/
 	maintainers?: PersonObject[];
 
-	/**
-	The first 64K of the readme data for the most-recently published version of the package.
-	*/
-	readme?: string;
-
-	/**
-	The name of the file from which the readme data was taken.
-	*/
-	readmeFilename?: string;
-
 	repository?: Repository;
 }> & Pick<Readonly<PackageJson>, HoistedPackageJsonFields>;
 
